@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="squid.engine.utils.TestUtils" tests="3" skipped="0" failures="0" errors="0" timestamp="2020-03-25T23:53:53" hostname="LAPTOP-J4IR2K0F" time="0.01">
+<testsuite name="squid.engine.utils.TestUtils" tests="3" skipped="0" failures="0" errors="0" timestamp="2020-04-05T02:22:25" hostname="LAPTOP-J4IR2K0F" time="0.003">
   <properties/>
-  <testcase name="testListToArray" classname="squid.engine.utils.TestUtils" time="0.007"/>
+  <testcase name="testListToArray" classname="squid.engine.utils.TestUtils" time="0.002"/>
   <testcase name="testCombineArrays" classname="squid.engine.utils.TestUtils" time="0.0"/>
-  <testcase name="testFillToSize" classname="squid.engine.utils.TestUtils" time="0.001"/>
+  <testcase name="testFillToSize" classname="squid.engine.utils.TestUtils" time="0.0"/>
   <system-out><![CDATA[]]></system-out>
   <system-err><![CDATA[]]></system-err>
 </testsuite>

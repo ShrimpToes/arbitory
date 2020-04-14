@@ -1,6 +1,6 @@
 package squid.engine;
 
-import squid.engine.scene.GamePiece;
+import squid.engine.scene.pieces.GamePiece;
 
 public interface IHud {
     GamePiece[] getGamePieces() throws Exception;

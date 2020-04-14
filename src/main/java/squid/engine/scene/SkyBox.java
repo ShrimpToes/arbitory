@@ -3,7 +3,8 @@ package squid.engine.scene;
 import squid.engine.graphics.textures.Material;
 import squid.engine.graphics.Mesh;
 import squid.engine.graphics.textures.Texture;
-import squid.engine.utils.OBJReader;
+import squid.engine.scene.pieces.GamePiece;
+import squid.engine.utils.readers.obj.OBJReader;
 
 public class SkyBox extends GamePiece {
     public SkyBox(String objModel, String textureFile, float scale) throws Exception {

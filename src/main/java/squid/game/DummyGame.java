@@ -3,7 +3,6 @@ package squid.game;
 import org.joml.Vector2f;
 import org.joml.Vector3f;
 import org.joml.Vector4f;
-import squid.engine.Game;
 import squid.engine.graphics.textures.Material;
 import squid.engine.scene.*;
 import squid.engine.IGame;
@@ -12,9 +11,17 @@ import squid.engine.Window;
 import squid.engine.graphics.lighting.*;
 import squid.engine.graphics.Mesh;
 import squid.engine.graphics.textures.Texture;
+import squid.engine.scene.pieces.Terrain;
+import squid.engine.scene.pieces.animated.AnimGamePiece;
+import squid.engine.scene.pieces.GamePiece;
+import squid.engine.scene.pieces.particle.FlowParticleEmitter;
+import squid.engine.scene.pieces.particle.Particle;
 import squid.engine.utils.Camera;
 import squid.engine.utils.MouseInput;
-import squid.engine.utils.OBJReader;
+import squid.engine.utils.readers.md5.MD5AnimModel;
+import squid.engine.utils.readers.obj.OBJReader;
+import squid.engine.utils.readers.md5.MD5Model;
+import squid.engine.utils.readers.md5.MD5Reader;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -66,6 +73,9 @@ public class DummyGame implements IGame {
     private Terrain terrain;
     private float angleInc;
 
+    private AnimGamePiece monster;
+    private FlowParticleEmitter particleEmitter;
+
     public DummyGame() {
         scene = new Scene();
         lighting = new Lighting();
@@ -91,29 +101,45 @@ public class DummyGame implements IGame {
 
         Mesh rockMesh = OBJReader.loadMesh("/models/cube.obj");
         rockMesh.setMaterial(rock);
-        GamePiece<Mesh> rockCube1 = new GamePiece<>(rockMesh);
+        GamePiece rockCube1 = new GamePiece(rockMesh);
         rockCube1.setScale(1f);
         rockCube1.setPosition(5f, 1f, 3f);
-        GamePiece<Mesh> rockCube2 = new GamePiece<>(rockMesh);
+        GamePiece rockCube2 = new GamePiece(rockMesh);
         rockCube2.setScale(2f);
         rockCube2.setPosition(5f, 6f, 3f);
 
         skyBox = new SkyBox("/models/skybox.obj", "textures/skybox_texture.png", 10);
 
-        GamePiece<Mesh> cube = new GamePiece<>(mesh);
+        GamePiece cube = new GamePiece(mesh);
+        cube.setPosition(1, 1, 1);
+        cube.setRotation(15f, 15f, 15f);
 
 //        terrain = new Terrain(2, 20, -0.1f, 0.1f, "textures/heightmap.png", "textures/terrain.png", 40);
         Mesh quadMesh = OBJReader.loadMesh("/models/plane.obj");
         Material quadMat = new Material(new Vector4f(0.0f, 0.0f, 1.0f, 10.0f), 1f);
         quadMesh.setMaterial(quadMat);
-        GamePiece<Mesh> quad = new GamePiece<>(quadMesh);
-        quad.setScale(10f);
-        quad.setPosition(0f, -1.5f, 0f);
+        GamePiece quad = new GamePiece(quadMesh);
+        quad.setScale(2f);
+        quad.setPosition(-5f, 2f, 4f);
+        quad.setRotation(90f, 180f, 0f);
+
+        Mesh groundMesh = OBJReader.loadMesh("/models/plane.obj");
+        Material groundMat = new Material(new Vector4f(0.0f, 0.0f, 1.0f, 10.0f), 1f);
+        groundMesh.setMaterial(groundMat);
+        GamePiece ground = new GamePiece(groundMesh);
+        ground.setScale(8f);
+        ground.setPosition(0f, -1.5f, 0f);
+
+        MD5Model md5Model = MD5Model.parse("/models/monster.md5mesh");
+        MD5AnimModel md5Anim = MD5AnimModel.parse("/models/monster.md5anim");
+        monster = MD5Reader.loadModel(md5Model, md5Anim, new Vector4f(1, 1, 1, 1));
+        monster.setScale(0.05f);
+        monster.setRotation(90f, 0f, 0f);
 
         setUpLights();
 
 //        gamePieces = new GamePiece[]{cube, rockCube1, rockCube2, quad};
-        gamePieces = new GamePiece[]{cube, quad};
+        gamePieces = new GamePiece[]{monster, quad, ground};
         scene.setGamePieces(gamePieces);
 //        scene.setGamePieces(terrain.getGamePieces());
         scene.setLighting(lighting);
@@ -121,8 +147,10 @@ public class DummyGame implements IGame {
 
         scene.setSkyBox(skyBox);
 
-        Fog fog = new Fog(true, new Vector3f(0.5f, 0.5f, 0.5f), 0.15f);
+        Fog fog = new Fog(true, new Vector3f(0.5f, 0.5f, 0.5f), 0.0f);
         scene.setFog(fog);
+
+        setupParticles();
 
         renderer.setDefaults(lighting, new Material(), fog);
         renderer.init();
@@ -153,7 +181,7 @@ public class DummyGame implements IGame {
         lightPosition = new Vector3f(0, 1, 1);
         lightColor = new Vector3f(1, 1, 1);
         directionalLight = new DirectionalLight(lightColor, lightPosition, lightIntensity);
-        directionalLight.setShadowPosMult(10);
+        directionalLight.setShadowPosMult(5f);
         directionalLight.setOrthoCords(-10.0f, 10.0f, -10.0f, 10.0f, -1.0f, 20.0f);
 
         lighting.setAmbientLight(ambientLight);
@@ -162,6 +190,27 @@ public class DummyGame implements IGame {
         lighting.setDirectionalLight(directionalLight);
         scene.setLighting(lighting);
         scene.setSkyBoxAmbientLight(new Vector3f(0.5f, 0.5f, 0.5f));
+    }
+
+    private void setupParticles() throws Exception {
+        Vector3f particleSpeed = new Vector3f(0, 1, 0);
+        particleSpeed.mul(2.5f);
+        long ttl = 4000;
+        int maxParticles = 200;
+        long creationPeriodMillis = 300;
+        float range = 0.2f;
+        float scale = 0.25f;
+        Mesh partMesh = OBJReader.loadMesh("/models/particle.obj");
+        Texture texture = new Texture("textures/particle_anim.png", 4, 4);
+        Material partMaterial = new Material(texture, 1.0f);
+        partMesh.setMaterial(partMaterial);
+        Particle particle = new Particle(partMesh, particleSpeed, ttl, 100);
+        particle.setScale(scale);
+        particleEmitter = new FlowParticleEmitter(particle, maxParticles, creationPeriodMillis);
+        particleEmitter.setActive(true);
+        particleEmitter.setPositionRndRange(range);
+        particleEmitter.setSpeedRndRange(range);
+        this.scene.setParticleEmitters(new FlowParticleEmitter[] {particleEmitter});
     }
 
     @Override
@@ -192,11 +241,17 @@ public class DummyGame implements IGame {
         if (window.isKeyPressed(GLFW_KEY_RIGHT)) {
             angleInc += 0.1f;
         }
+        if (mouseInput.isLeftButtonPressed()) {
+            monster.nextFrame();
+            hud.setFrameStatus("current frame: " + monster.getCurrentFrameNumber());
+            gamePieces[0] = monster;
+        }
     }
 
     @Override
     public void update(float interval, MouseInput mouseInput) {
 //        updateDirectionalLight();
+        particleEmitter.update((long) interval);
         Vector3f prevPos = new Vector3f(camera.getPosition());
         camera.movePosition(cameraInc.x * CAMERA_POS_STEP,
                 cameraInc.y * CAMERA_POS_STEP, cameraInc.z * CAMERA_POS_STEP);
@@ -223,6 +278,10 @@ public class DummyGame implements IGame {
         lightDirection.normalize();
         float lightAngle = (float)Math.toDegrees(Math.acos(lightDirection.z));
         hud.setStatusText("LightAngle: " + lightAngle);
+
+//        Vector3f currCubeRot = gamePieces[0].getRotation();
+//        currCubeRot.add(1f, 1f, 1f);
+//        gamePieces[0].setRotation(currCubeRot.x, currCubeRot.y, currCubeRot.z);
 
         Mesh quadMesh = gamePieces[1].getMesh();
         quadMesh.setMaterial(new Material(renderer.getShadowMap().getDepthMap()));

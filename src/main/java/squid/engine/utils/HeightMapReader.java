@@ -2,7 +2,7 @@ package squid.engine.utils;
 
 import org.joml.Vector3f;
 import org.lwjgl.system.MemoryStack;
-import squid.engine.graphics.HeightMap;
+import squid.engine.scene.pieces.HeightMap;
 import squid.engine.graphics.textures.Material;
 import squid.engine.graphics.textures.Texture;
 

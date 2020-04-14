@@ -3,6 +3,8 @@ package squid.engine.scene;
 import org.joml.Vector3f;
 import squid.engine.graphics.lighting.Lighting;
 import squid.engine.graphics.Mesh;
+import squid.engine.scene.pieces.GamePiece;
+import squid.engine.scene.pieces.particle.IParticleEmitter;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -21,6 +23,8 @@ public class Scene {
 
     private Map<Mesh, List<GamePiece>> meshMap;
 
+    private IParticleEmitter[] particleEmitters;
+
     public Scene() {
         meshMap = new HashMap<>();
     }
@@ -29,11 +33,7 @@ public class Scene {
         if (gamePieces == null) return;
         for (GamePiece gamePiece : gamePieces) {
             Mesh mesh = gamePiece.getMesh();
-            List<GamePiece> list = meshMap.get(mesh);
-            if (list == null) {
-                list = new ArrayList<>();
-                meshMap.put(mesh, list);
-            }
+            List<GamePiece> list = meshMap.computeIfAbsent(mesh, k -> new ArrayList<>());
             if (!list.contains(gamePiece)) {
                 list.add(gamePiece);
             }
@@ -42,6 +42,14 @@ public class Scene {
 
     public Map<Mesh, List<GamePiece>> getMeshMap() {
         return meshMap;
+    }
+
+    public IParticleEmitter[] getParticleEmitters() {
+        return particleEmitters;
+    }
+
+    public void setParticleEmitters(IParticleEmitter[] particleEmitters) {
+        this.particleEmitters = particleEmitters;
     }
 
     public SkyBox getSkyBox() {

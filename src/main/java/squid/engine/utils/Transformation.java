@@ -2,7 +2,7 @@ package squid.engine.utils;
 
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
-import squid.engine.scene.GamePiece;
+import squid.engine.scene.pieces.GamePiece;
 
 public class Transformation {
 
@@ -10,6 +10,7 @@ public class Transformation {
     private final Matrix4f modelMatrix;
     private final Matrix4f modelViewMatrix;
     private final Matrix4f modelLightMatrix;
+    private final Matrix4f modelLightViewMatrix;
     private final Matrix4f viewMatrix;
     private final Matrix4f lightViewMatrix;
     private final Matrix4f orthoProjMatrix;
@@ -21,6 +22,7 @@ public class Transformation {
         modelMatrix = new Matrix4f();
         modelViewMatrix = new Matrix4f();
         modelLightMatrix = new Matrix4f();
+        modelLightViewMatrix = new Matrix4f();
         viewMatrix = new Matrix4f();
         lightViewMatrix = new Matrix4f();
         orthoProjMatrix = new Matrix4f();
@@ -83,6 +85,16 @@ public class Transformation {
         return ortho2dMatrix;
     }
 
+    public Matrix4f buildModelMatrix(GamePiece gamePiece) {
+        Vector3f rotation = gamePiece.getRotation();
+        modelMatrix.identity().translate(gamePiece.getPosition())
+                .rotateX((float) Math.toRadians(-rotation.x))
+                .rotateY((float) Math.toRadians(-rotation.y))
+                .rotateZ((float) Math.toRadians(-rotation.z))
+                .scale(gamePiece.getScale());
+        return modelMatrix;
+    }
+
     public Matrix4f buildModelViewMatrix(GamePiece gamePiece, Matrix4f viewMatrix) {
         Vector3f rotation = gamePiece.getRotation();
         modelMatrix.identity().translate(gamePiece.getPosition()).
@@ -94,6 +106,11 @@ public class Transformation {
         return modelViewMatrix.mul(modelMatrix);
     }
 
+    public Matrix4f buildModelViewMatrix(Matrix4f modelMatrix, Matrix4f viewMatrix) {
+        modelViewMatrix.set(viewMatrix);
+        return modelViewMatrix.mul(modelMatrix);
+    }
+
     public Matrix4f buildModelLightViewMatrix(GamePiece gamePiece, Matrix4f matrix) {
         Vector3f rotation = gamePiece.getRotation();
         modelLightMatrix.identity().translate(gamePiece.getPosition()).
@@ -101,8 +118,13 @@ public class Transformation {
                 rotateY((float)Math.toRadians(-rotation.y)).
                 rotateZ((float)Math.toRadians(-rotation.z)).
                 scale(gamePiece.getScale());
-        modelLightMatrix.set(matrix);
-        return modelLightMatrix.mul(modelLightMatrix);
+        modelLightViewMatrix.set(matrix);
+        return modelLightViewMatrix.mul(modelLightMatrix);
+    }
+
+    public Matrix4f buildModelLightViewMatrix(Matrix4f modelMatrix, Matrix4f viewMatrix) {
+        modelLightViewMatrix.set(viewMatrix);
+        return modelLightViewMatrix.mul(modelMatrix);
     }
 
     public Matrix4f buildOrtoProjModelMatrix(GamePiece gamePiece, Matrix4f orthoMatrix) {

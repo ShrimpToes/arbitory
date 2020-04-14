@@ -14,12 +14,10 @@ import static org.lwjgl.stb.STBImage.*;
 public class Texture {
 
     private final int id;
-
     private final int width;
-
     private final int height;
-
     private final String name;
+    private int rows, cols = 1;
 
     public Texture(String fileName) throws Exception {
         this.name = fileName;
@@ -40,6 +38,12 @@ public class Texture {
         }
 
         this.id = createTexture(buf);
+    }
+
+    public Texture(String fileName, int rows, int cols) throws Exception {
+        this(fileName);
+        this.rows = rows;
+        this.cols = cols;
     }
 
     public Texture(int width, int height, int pixelFormat) throws Exception {
@@ -104,10 +108,6 @@ public class Texture {
         return id;
     }
 
-    public void cleanup() {
-        glDeleteTextures(id);
-    }
-
     public int getHeight() {
         return height;
     }
@@ -115,4 +115,25 @@ public class Texture {
     public int getWidth() {
         return width;
     }
+
+    public int getRows() {
+        return rows;
+    }
+
+    public void setRows(int rows) {
+        this.rows = rows;
+    }
+
+    public int getCols() {
+        return cols;
+    }
+
+    public void setCols(int cols) {
+        this.cols = cols;
+    }
+
+    public void cleanup() {
+        glDeleteTextures(id);
+    }
+
 }

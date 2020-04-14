@@ -20,6 +20,16 @@ public class Utils {
         return result;
     }
 
+    public static boolean existsResourceFile(String fileName) {
+        boolean result;
+        try (InputStream is = Utils.class.getResourceAsStream(fileName ) ) {
+            result = is != null;
+        } catch (Exception excp) {
+            result = false;
+        }
+        return result;
+    }
+
     public static List<String> readAllLines(String fileName) throws Exception {
         List<String> list = new ArrayList<>();
         try (BufferedReader br = new BufferedReader(new InputStreamReader(Class.forName(Utils.class.getName()).getResourceAsStream(fileName)))) {
@@ -39,6 +49,11 @@ public class Utils {
         }
         return floatArr;
     }
+
+    public static int[] listIntToArray(List<Integer> list) {
+        return list.stream().mapToInt((Integer v) -> v).toArray();
+    }
+
 
     public static <T> T[] fillToSize(Class<T> type , T[] input, int length) {
         @SuppressWarnings("unchecked")

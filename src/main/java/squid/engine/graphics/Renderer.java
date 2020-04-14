@@ -3,17 +3,19 @@ package squid.engine.graphics;
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
 import org.joml.Vector4f;
-import org.lwjgl.opengl.GL11;
 import squid.engine.graphics.lighting.*;
 import squid.engine.graphics.textures.Material;
+import squid.engine.graphics.textures.Texture;
 import squid.engine.graphics.uniforms.*;
 import squid.engine.graphics.uniforms.settable.*;
-import squid.engine.graphics.uniforms.supplied.IntegerUniform;
 import squid.engine.scene.Fog;
-import squid.engine.scene.GamePiece;
+import squid.engine.scene.pieces.GamePiece;
 import squid.engine.IHud;
 import squid.engine.scene.Scene;
 import squid.engine.scene.SkyBox;
+import squid.engine.scene.pieces.animated.AnimGamePiece;
+import squid.engine.scene.pieces.animated.AnimatedFrame;
+import squid.engine.scene.pieces.particle.IParticleEmitter;
 import squid.engine.utils.Camera;
 import squid.engine.utils.Transformation;
 import squid.engine.utils.Utils;
@@ -42,6 +44,7 @@ public class Renderer {
     private Shader hudShader;
     private Shader skyBoxShader;
     private Shader depthShader;
+    private Shader particleShader;
 
     private Transformation transformation;
     private ShadowMap shadowMap;
@@ -68,6 +71,7 @@ public class Renderer {
     private MultiUniform<Fog> fogUniform;
     private SettableIntegerUniform shadowMapUniform;
     private SettableMat4fUniform modelLightViewMatrix;
+    private SettableMat4fArrayUniform jointsMatrix;
 
     private SettableMat4fUniform skyBoxProjectionMatrix;
     private SettableIntegerUniform skyBoxTextureSampler;
@@ -77,8 +81,17 @@ public class Renderer {
     private SettableVec4fUniform color;
     private SettableMat4fUniform projModelMatrix;
 
+    private SettableMat4fArrayUniform depthJointsMatrices;
     private SettableMat4fUniform depthOrthoProjectionMatrix;
     private SettableMat4fUniform depthModelLightViewMatrix;
+
+    private SettableIntegerUniform particleTextureSampler;
+    private SettableMat4fUniform particleProjectionMatrix;
+    private SettableMat4fUniform particleModelViewMatrix;
+    private SettableFloatUniform particleTexXOffset;
+    private SettableFloatUniform particleTexYOffset;
+    private SettableIntegerUniform particleNumRows;
+    private SettableIntegerUniform particleNumCols;
 
     public Renderer() {
         transformation = new Transformation();
@@ -92,6 +105,7 @@ public class Renderer {
         setupHudShader();
         setupSkyBoxShader();
         setUpDepthShader();
+        setUpParticleShader();
     }
 
     public void setDefaults(Lighting lighting, Material material, Fog fog) {
@@ -117,6 +131,7 @@ public class Renderer {
         fogUniform = new MultiUniform<>("fog", defaultFog);
         shadowMapUniform = new SettableIntegerUniform("shadowMap");
         modelLightViewMatrix = new SettableMat4fUniform("modelLightViewMatrix");
+        jointsMatrix = new SettableMat4fArrayUniform("jointsMatrix");
 
         skyBoxProjectionMatrix = new SettableMat4fUniform("projectionMatrix");
         skyBoxModelViewMatrix = new SettableMat4fUniform("modelViewMatrix");
@@ -126,13 +141,23 @@ public class Renderer {
         color = new SettableVec4fUniform("color");
         projModelMatrix = new SettableMat4fUniform("projModelMatrix");
 
+        depthJointsMatrices = new SettableMat4fArrayUniform("jointsMatrix");
         depthOrthoProjectionMatrix = new SettableMat4fUniform("orthoProjectionMatrix");
         depthModelLightViewMatrix = new SettableMat4fUniform("modelLightViewMatrix");
+
+        particleTextureSampler = new SettableIntegerUniform("texture_sampler");
+        particleProjectionMatrix = new SettableMat4fUniform("projectionMatrix");
+        particleModelViewMatrix = new SettableMat4fUniform("modelViewMatrix");
+        particleTexXOffset = new SettableFloatUniform("texXOffset");
+        particleTexYOffset = new SettableFloatUniform("texYOffset");
+        particleNumRows = new SettableIntegerUniform("numRows");
+        particleNumCols = new SettableIntegerUniform("numCols");
 
         textureSampler.setValue(0);
         normalMap.setValue(1);
         shadowMapUniform.setValue(2);
         skyBoxTextureSampler.setValue(0);
+        particleTextureSampler.setValue(0);
         specularPowerUniform.setValue(specularPower);
     }
 
@@ -151,6 +176,7 @@ public class Renderer {
         specularPowerUniform.create(programId);
         ambientLightUniform.create(programId);
         fogUniform.create(programId);
+        jointsMatrix.create(programId);
     }
 
     private void createSkyBoxUniforms(int programId) throws Exception {
@@ -166,8 +192,19 @@ public class Renderer {
     }
 
     private void createDepthUniforms(int programId) throws Exception {
+        depthJointsMatrices.create(programId);
         depthOrthoProjectionMatrix.create(programId);
         depthModelLightViewMatrix.create(programId);
+    }
+
+    private void createParticleUniforms(int programId) throws Exception {
+        particleTextureSampler.create(programId);
+        particleProjectionMatrix.create(programId);
+        particleModelViewMatrix.create(programId);
+        particleTexXOffset.create(programId);
+        particleTexYOffset.create(programId);
+        particleNumRows.create(programId);
+        particleNumCols.create(programId);
     }
 
     public void setUpSceneShader() throws Exception {
@@ -202,6 +239,14 @@ public class Renderer {
         createDepthUniforms(depthShader.getProgramId());
     }
 
+    private void setUpParticleShader() throws Exception {
+        particleShader = new Shader();
+        particleShader.createVertexShader(Utils.loadResource("/shaders/particle_vertex.vs"));
+        particleShader.createFragmentShader(Utils.loadResource("/shaders/particle_fragment.fs"));
+        particleShader.link();
+        createParticleUniforms(particleShader.getProgramId());
+    }
+
     public void render(Window window, Camera camera, Scene scene, IHud hud) throws Exception {
         clear();
 
@@ -213,6 +258,7 @@ public class Renderer {
         transformation.updateViewMatrix(camera);
 
         renderScene(scene);
+        renderParticles(scene);
 //        renderSkyBox(scene);
         renderHud(window, hud);
     }
@@ -247,6 +293,12 @@ public class Renderer {
                         Matrix4f modelLightViewMatrix = transformation.buildModelViewMatrix(gamePiece, lightViewMatrix);
                         this.depthModelLightViewMatrix.setValue(modelLightViewMatrix);
                         this.depthModelLightViewMatrix.set();
+                        if (gamePiece instanceof AnimGamePiece) {
+                            AnimGamePiece animGamePiece = (AnimGamePiece) gamePiece;
+                            AnimatedFrame frame = animGamePiece.getCurrentFrame();
+                            depthJointsMatrices.setValue(frame.getJointMatrices());
+                            depthJointsMatrices.set();
+                        }
                     }
             );
         }
@@ -286,11 +338,63 @@ public class Renderer {
                 Matrix4f modelLightViewMatrix = transformation.buildModelLightViewMatrix(gamePiece, lightViewMatrix);
                 this.modelLightViewMatrix.setValue(modelLightViewMatrix);
                 this.modelLightViewMatrix.set();
+                if (gamePiece instanceof AnimGamePiece) {
+                    AnimGamePiece animGamePiece = (AnimGamePiece) gamePiece;
+                    AnimatedFrame frame = animGamePiece.getCurrentFrame();
+                    jointsMatrix.setValue(frame.getJointMatrices());
+                    jointsMatrix.set();
+                }
             }
             );
         }
 
         sceneShader.unbind();
+    }
+
+    private void renderParticles(Scene scene) {
+        particleShader.bind();
+
+        particleTextureSampler.set();
+        particleProjectionMatrix.setValue(transformation.getProjectionMatrix());
+        particleProjectionMatrix.set();
+
+        Matrix4f viewMatrix = transformation.getViewMatrix();
+        IParticleEmitter[] emitters = scene.getParticleEmitters();
+        int numEmitters = emitters != null ? emitters.length : 0;
+
+        glDepthMask(false);
+        glBlendFunc(GL_SRC_ALPHA, GL_ONE);
+
+        for (int i = 0; i < numEmitters; i++) {
+            IParticleEmitter emitter = emitters[i];
+            Mesh mesh = emitter.getBaseParticle().getMesh();
+            Texture text = mesh.getMaterial().getTexture();
+            particleNumRows.setValue(text.getRows());
+            particleNumCols.setValue(text.getCols());
+            particleNumRows.set();
+            particleNumCols.set();
+
+            mesh.renderList(emitter.getParticles(), (GamePiece gamePiece) -> {
+                int row = gamePiece.getTextPos() / text.getRows();
+                int col = gamePiece.getTextPos() / text.getCols();
+                float texXOffset = (float) col / text.getCols();
+                float texYOffset = (float) row / text.getRows();
+                particleTexXOffset.setValue(texXOffset);
+                particleTexYOffset.setValue(texYOffset);
+                particleTexXOffset.set();
+                particleTexYOffset.set();
+
+                Matrix4f modelMatrix = transformation.buildModelMatrix(gamePiece);
+                viewMatrix.transpose3x3(modelMatrix);
+                Matrix4f modelViewMatrix = transformation.buildModelViewMatrix(modelMatrix, viewMatrix);
+                particleModelViewMatrix.setValue(modelViewMatrix);
+                particleModelViewMatrix.set();
+            });
+        }
+
+        glDepthMask(true);glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+        particleShader.unbind();
     }
 
     private void renderSkyBox(Scene scene) {
@@ -382,7 +486,7 @@ public class Renderer {
             Mesh mesh = gamePiece.getMesh();
             // Set ortohtaphic and model matrix for this HUD item
 
-            projModelMatrix.setValue(ortho);
+            projModelMatrix.setValue(transformation.buildOrtoProjModelMatrix(gamePiece, ortho));
             color.setValue(gamePiece.getMesh().getMaterial().getAmbientColour());
 
             projModelMatrix.set();

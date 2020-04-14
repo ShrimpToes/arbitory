@@ -3,11 +3,12 @@ package squid.engine.graphics;
 import org.lwjgl.system.MemoryUtil;
 import squid.engine.graphics.textures.Material;
 import squid.engine.graphics.textures.Texture;
-import squid.engine.scene.GamePiece;
+import squid.engine.scene.pieces.GamePiece;
 
 import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.function.Consumer;
 
@@ -21,19 +22,25 @@ import static org.lwjgl.system.MemoryUtil.memFree;
 
 public class Mesh {
 
-    private final int vaoId;
-
-    private final List<Integer> vboList;
-
-    private final int verticesCount;
-
-    private Material material;
+    public static final int MAX_WEIGHTS = 4;
+    protected final int vaoId;
+    protected final List<Integer> vboList;
+    protected final int verticesCount;
+    protected Material material;
 
     public Mesh(float[] vertices, int[] indices, float[] textCoords, float[] normals) {
+        this(vertices, indices, textCoords, normals,
+                Mesh.createEmptyIntArray(Mesh.MAX_WEIGHTS * vertices.length / 3, 0),
+                Mesh.createEmptyFloatArray(Mesh.MAX_WEIGHTS * vertices.length / 3, 0));
+    }
+
+    public Mesh(float[] vertices, int[] indices, float[] textCoords, float[] normals, int[] jointIndices, float[] weights) {
         FloatBuffer verticesBuffer = null;
         IntBuffer idxBuffer = null;
         FloatBuffer textCoordsBuffer = null;
         FloatBuffer normalsBuffer = null;
+        FloatBuffer weightsBuffer = null;
+        IntBuffer jointIndicesBuffer = null;
         vboList = new ArrayList<>();
         try {
 
@@ -73,10 +80,34 @@ public class Mesh {
             vboId = glGenBuffers();
             vboList.add(vboId);
             normalsBuffer = MemoryUtil.memAllocFloat(normals.length);
-            normalsBuffer.put(normals).flip();
+            if (normalsBuffer.capacity() > 0) {
+                normalsBuffer.put(normals).flip();
+            } else {
+                // Create empty structure
+                normalsBuffer = MemoryUtil.memAllocFloat(vertices.length);
+            }
             glBindBuffer(GL_ARRAY_BUFFER, vboId);
             glBufferData(GL_ARRAY_BUFFER, normalsBuffer, GL_STATIC_DRAW);
             glVertexAttribPointer(2, 3, GL_FLOAT, false, 0, 0);
+
+            //weights
+            vboId = glGenBuffers();
+            vboList.add(vboId);
+            weightsBuffer = MemoryUtil.memAllocFloat(weights.length);
+            weightsBuffer.put(weights).flip();
+            glBindBuffer(GL_ARRAY_BUFFER, vboId);
+            glBufferData(GL_ARRAY_BUFFER, weightsBuffer, GL_STATIC_DRAW);
+            glVertexAttribPointer(3, 4, GL_FLOAT, false, 0, 0);
+
+            //jointIndices
+            vboId = glGenBuffers();
+            vboList.add(vboId);
+            jointIndicesBuffer = MemoryUtil.memAllocInt(jointIndices.length);
+            jointIndicesBuffer.put(jointIndices).flip();
+            glBindBuffer(GL_ARRAY_BUFFER, vboId);
+            glBufferData(GL_ARRAY_BUFFER, jointIndicesBuffer, GL_STATIC_DRAW);
+            glVertexAttribPointer(4, 4, GL_FLOAT, false, 0, 0);
+
 
             glBindBuffer(GL_ARRAY_BUFFER, 0);
             glBindVertexArray(0);
@@ -89,6 +120,12 @@ public class Mesh {
             }
             if (textCoordsBuffer != null) {
                 memFree(textCoordsBuffer);
+            }
+            if (jointIndicesBuffer != null) {
+                memFree(jointIndicesBuffer);
+            }
+            if (weightsBuffer != null) {
+                memFree(weightsBuffer);
             }
         }
     }
@@ -109,7 +146,7 @@ public class Mesh {
         return verticesCount;
     }
 
-    private void initRender() {
+    protected void initRender() {
         Texture texture = material.getTexture();
         if (texture != null) {
             glActiveTexture(GL_TEXTURE0);
@@ -120,11 +157,15 @@ public class Mesh {
             glActiveTexture(GL_TEXTURE1);
             glBindTexture(GL_TEXTURE_2D, normalMap.getId());
         }
-
         glBindVertexArray(getVaoId());
         glEnableVertexAttribArray(0);
         glEnableVertexAttribArray(1);
         glEnableVertexAttribArray(2);
+        glEnableVertexAttribArray(3);
+        glEnableVertexAttribArray(4);
+
+
+
     }
 
     public void render() {
@@ -137,10 +178,7 @@ public class Mesh {
         glDrawElements(GL_TRIANGLES, getVertexCount(), GL_UNSIGNED_INT, 0);
     }
 
-    private void finishRender() {
-        glDisableVertexAttribArray(0);
-        glDisableVertexAttribArray(1);
-        glDisableVertexAttribArray(2);
+    protected void finishRender() {
         glBindVertexArray(0);
         glBindTexture(GL_TEXTURE_2D, 0);
     }
@@ -157,6 +195,9 @@ public class Mesh {
     public void cleanup() {
         glDisableVertexAttribArray(0);
         glDisableVertexAttribArray(1);
+        glDisableVertexAttribArray(2);
+        glDisableVertexAttribArray(3);
+        glDisableVertexAttribArray(4);
 
         glBindBuffer(GL_ARRAY_BUFFER, 0);
 
@@ -185,5 +226,18 @@ public class Mesh {
         // Delete the VAO
         glBindVertexArray(0);
         glDeleteVertexArrays(vaoId);
+    }
+
+
+    private static float[] createEmptyFloatArray(int length, float defaultValue) {
+        float[] result = new float[length];
+        Arrays.fill(result, defaultValue);
+        return result;
+    }
+
+    private static int[] createEmptyIntArray(int length, int defaultValue) {
+        int[] result = new int[length];
+        Arrays.fill(result, defaultValue);
+        return result;
     }
 }
