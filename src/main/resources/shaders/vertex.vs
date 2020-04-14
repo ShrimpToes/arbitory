@@ -30,28 +30,36 @@ void main()
     vec4 initNormal = vec4(0, 0, 0, 0);
     mat4 modelViewMatrix;
     mat4 modelLightViewMatrix;
+    //instanced rendering
     if (isInstanced > 0) {
         modelViewMatrix = modelViewInstancedMatrix;
         lightViewMatrix = modelLightViewInstancedMatrix;
-    }
-    int count = 0;
-    for(int i = 0; i < MAX_WEIGHTS; i++)
-    {
-        float weight = jointWeights[i];
-        if(weight > 0) {
-            count++;
-            int jointIndex = jointIndices[i];
-            vec4 tmpPos = jointsMatrix[jointIndex] * vec4(position, 1.0);
-            initPos += weight * tmpPos;
-
-            vec4 tmpNormal = jointsMatrix[jointIndex] * vec4(vertexNormal, 0.0);
-            initNormal += weight * tmpNormal;
-        }
-    }
-    if (count == 0)
-    {
         initPos = vec4(position, 1.0);
         initNormal = vec4(vertexNormal, 0.0);
+    } else {
+        //skeletal animations
+        modelViewMatrix = modelViewNonInstancedMatrix;
+        modelLightViewMatrix = modelLightViewNonInstancedMatrix;
+
+        int count = 0;
+        for (int i = 0; i < MAX_WEIGHTS; i++)
+        {
+            float weight = jointWeights[i];
+            if (weight > 0) {
+                count++;
+                int jointIndex = jointIndices[i];
+                vec4 tmpPos = jointsMatrix[jointIndex] * vec4(position, 1.0);
+                initPos += weight * tmpPos;
+
+                vec4 tmpNormal = jointsMatrix[jointIndex] * vec4(vertexNormal, 0.0);
+                initNormal += weight * tmpNormal;
+            }
+        }
+        if (count == 0)
+        {
+            initPos = vec4(position, 1.0);
+            initNormal = vec4(vertexNormal, 0.0);
+        }
     }
 
     vec4 mvPos = modelViewMatrix * initPos;
