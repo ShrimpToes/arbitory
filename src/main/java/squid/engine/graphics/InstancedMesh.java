@@ -89,6 +89,18 @@ public class InstancedMesh extends Mesh {
         super.finishRender();
     }
 
+    public void instancedRender(List<GamePiece> gamePieces, boolean useDepthMap, Transformation transformation,
+                                 Matrix4f viewMatrix, Matrix4f lightViewMatrix) {
+        initRender();
+        int length = gamePieces.size();
+        int chunkSize = numInstances;
+        for (int i = 0; i < length; i += chunkSize) {
+            int end = Math.min(length, i + chunkSize);
+            List<GamePiece> subList = gamePieces.subList(i, end);
+            renderChunk(subList, useDepthMap, transformation, viewMatrix, lightViewMatrix);
+        }
+    }
+
     private void renderChunk(List<GamePiece> gamePieces, boolean depthMap, Transformation transformation,
                              Matrix4f viewMatrix, Matrix4f ligthViewMatrix) {
         modelViewBuffer.clear();

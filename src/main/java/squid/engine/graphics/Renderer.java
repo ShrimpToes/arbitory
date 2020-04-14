@@ -62,7 +62,7 @@ public class Renderer {
     private MultiUniform<DirectionalLight> directionalLight;
     private SettableMat4fUniform projectionMatrix;
     private SettableMat4fUniform orthoProjectionMatrix;
-    private SettableMat4fUniform modelViewMatrix;
+    private SettableMat4fUniform modelViewNonInstancedMatrix;
     private SettableIntegerUniform textureSampler;
     private SettableIntegerUniform normalMap;
     private MultiUniform<Material> material;
@@ -70,8 +70,9 @@ public class Renderer {
     private SettableVec3fUniform ambientLightUniform;
     private MultiUniform<Fog> fogUniform;
     private SettableIntegerUniform shadowMapUniform;
-    private SettableMat4fUniform modelLightViewMatrix;
+    private SettableMat4fUniform modelLightViewNonInstancedMatrix;
     private SettableMat4fArrayUniform jointsMatrix;
+    private SettableIntegerUniform isInstanced;
 
     private SettableMat4fUniform skyBoxProjectionMatrix;
     private SettableIntegerUniform skyBoxTextureSampler;
@@ -122,7 +123,7 @@ public class Renderer {
         directionalLight = new MultiUniform<>("directionalLight", defaultDirLight);
         projectionMatrix = new SettableMat4fUniform("projectionMatrix");
         orthoProjectionMatrix = new SettableMat4fUniform("orthoProjectionMatrix");
-        modelViewMatrix = new SettableMat4fUniform("modelViewMatrix");
+        modelViewNonInstancedMatrix = new SettableMat4fUniform("modelViewNonInstancedMatrix");
         textureSampler = new SettableIntegerUniform("texture_sampler");
         normalMap = new SettableIntegerUniform("normalMap");
         material = new MultiUniform<>("material", defaultMaterial);
@@ -130,8 +131,9 @@ public class Renderer {
         ambientLightUniform = new SettableVec3fUniform("ambientLight");
         fogUniform = new MultiUniform<>("fog", defaultFog);
         shadowMapUniform = new SettableIntegerUniform("shadowMap");
-        modelLightViewMatrix = new SettableMat4fUniform("modelLightViewMatrix");
+        modelLightViewNonInstancedMatrix = new SettableMat4fUniform("modelLightViewNonInstancedMatrix");
         jointsMatrix = new SettableMat4fArrayUniform("jointsMatrix");
+        isInstanced = new SettableIntegerUniform("isInstanced");
 
         skyBoxProjectionMatrix = new SettableMat4fUniform("projectionMatrix");
         skyBoxModelViewMatrix = new SettableMat4fUniform("modelViewMatrix");
@@ -167,8 +169,8 @@ public class Renderer {
         directionalLight.create(programId);
         projectionMatrix.create(programId);
         orthoProjectionMatrix.create(programId);
-        modelViewMatrix.create(programId);
-        modelLightViewMatrix.create(programId);
+        modelViewNonInstancedMatrix.create(programId);
+        modelLightViewNonInstancedMatrix.create(programId);
         textureSampler.create(programId);
         normalMap.create(programId);
         shadowMapUniform.create(programId);
@@ -326,29 +328,60 @@ public class Renderer {
         normalMap.set();
         shadowMapUniform.set();
 
+        renderMeshes(scene, false, sceneShader, viewMatrix, lightViewMatrix);
+        renderInstancedMeshes(scene, false, sceneShader, viewMatrix, lightViewMatrix);
+
+        sceneShader.unbind();
+    }
+
+    private void renderMeshes(Scene scene, boolean isShadows, Shader shader, Matrix4f viewMatrix, Matrix4f lightViewMatrix) {
+        isInstanced.setValue(0);
+        isInstanced.set();
+
         Map<Mesh, List<GamePiece>> meshMap = scene.getMeshMap();
         for (Mesh mesh : meshMap.keySet()) {
-            material.setValue(mesh.getMaterial());
-            material.set();
-            glActiveTexture(GL_TEXTURE2);
-            glBindTexture(GL_TEXTURE_2D, shadowMap.getDepthMap().getId());
+            if (!isShadows) {
+                material.setValue(mesh.getMaterial());
+                material.set();
+                glActiveTexture(GL_TEXTURE2);
+                glBindTexture(GL_TEXTURE_2D, shadowMap.getDepthMap().getId());
+            }
+
             mesh.renderList(meshMap.get(mesh), (GamePiece gamePiece) -> {
-                modelViewMatrix.setValue(transformation.buildModelViewMatrix(gamePiece, viewMatrix));
-                modelViewMatrix.set();
-                Matrix4f modelLightViewMatrix = transformation.buildModelLightViewMatrix(gamePiece, lightViewMatrix);
-                this.modelLightViewMatrix.setValue(modelLightViewMatrix);
-                this.modelLightViewMatrix.set();
+                Matrix4f modelMatrix = transformation.buildModelMatrix(gamePiece);
+                if (!isShadows) {
+                    Matrix4f modelViewMatrix = transformation.buildModelViewMatrix(modelMatrix, viewMatrix);
+                    modelViewNonInstancedMatrix.setValue(modelViewMatrix);
+                    modelViewNonInstancedMatrix.set();
+                }
+                Matrix4f modelLightViewMatrix = transformation.buildModelLightViewMatrix(modelMatrix, lightViewMatrix);
+                modelLightViewNonInstancedMatrix.setValue(modelLightViewMatrix);
+                modelLightViewNonInstancedMatrix.set();
+
                 if (gamePiece instanceof AnimGamePiece) {
                     AnimGamePiece animGamePiece = (AnimGamePiece) gamePiece;
                     AnimatedFrame frame = animGamePiece.getCurrentFrame();
                     jointsMatrix.setValue(frame.getJointMatrices());
                     jointsMatrix.set();
                 }
-            }
-            );
+            });
         }
+    }
 
-        sceneShader.unbind();
+    private void renderInstancedMeshes(Scene scene, boolean isShadows, Shader shader, Matrix4f viewMatrix, Matrix4f lightViewMatrix) {
+        isInstanced.setValue(1);
+        isInstanced.set();
+
+        Map<InstancedMesh, List<GamePiece>> meshMap = scene.getInstancedMeshMap();
+        if (meshMap == null) return;
+        for (InstancedMesh mesh : meshMap.keySet()) {
+            if (!isShadows) {
+                material.setValue(mesh.getMaterial());
+                glActiveTexture(GL_TEXTURE2);
+                glBindTexture(GL_TEXTURE_2D, shadowMap.getDepthMap().getId());
+            }
+            mesh.instancedRender(meshMap.get(mesh), isShadows, transformation, viewMatrix, lightViewMatrix);
+        }
     }
 
     private void renderParticles(Scene scene) {

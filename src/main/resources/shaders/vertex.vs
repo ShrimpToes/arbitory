@@ -33,7 +33,7 @@ void main()
     //instanced rendering
     if (isInstanced > 0) {
         modelViewMatrix = modelViewInstancedMatrix;
-        lightViewMatrix = modelLightViewInstancedMatrix;
+        modelLightViewMatrix = modelLightViewInstancedMatrix;
         initPos = vec4(position, 1.0);
         initNormal = vec4(vertexNormal, 0.0);
     } else {

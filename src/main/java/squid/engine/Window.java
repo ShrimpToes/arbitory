@@ -16,14 +16,14 @@ import static org.lwjgl.opengl.GL11C.*;
 public class Window {
     private long window;
     private String name;
-    private int  width = 900;
-    private int height = 900;
+    private static int  width = 900;
+    private static int height = 900;
     private boolean resized;
 
     public Window(String name, int width, int height) {
         this.name = name;
-        this.width = width;
-        this.height = height;
+        Window.width = width;
+        Window.height = height;
         resized = false;
     }
 
@@ -117,11 +117,11 @@ public class Window {
         return resized;
     }
 
-    public int getWidth() {
+    public static int getWidth() {
         return width;
     }
 
-    public int getHeight() {
+    public static int getHeight() {
         return height;
     }
 

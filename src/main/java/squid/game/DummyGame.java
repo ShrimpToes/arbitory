@@ -140,7 +140,7 @@ public class DummyGame implements IGame {
 
 //        gamePieces = new GamePiece[]{cube, rockCube1, rockCube2, quad};
         gamePieces = new GamePiece[]{monster, quad, ground};
-        scene.setGamePieces(gamePieces);
+        scene.setMeshMap(gamePieces);
 //        scene.setGamePieces(terrain.getGamePieces());
         scene.setLighting(lighting);
         scene.setSkyBox(skyBox);
@@ -243,7 +243,6 @@ public class DummyGame implements IGame {
         }
         if (mouseInput.isLeftButtonPressed()) {
             monster.nextFrame();
-            hud.setFrameStatus("current frame: " + monster.getCurrentFrameNumber());
             gamePieces[0] = monster;
         }
     }
@@ -286,7 +285,6 @@ public class DummyGame implements IGame {
         Mesh quadMesh = gamePieces[1].getMesh();
         quadMesh.setMaterial(new Material(renderer.getShadowMap().getDepthMap()));
         gamePieces[1].setMesh(quadMesh);
-        scene.setGamePieces(gamePieces);
     }
 
     private void updateDirectionalLight() {

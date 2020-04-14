@@ -1,6 +1,7 @@
 package squid.engine.scene;
 
 import org.joml.Vector3f;
+import squid.engine.graphics.InstancedMesh;
 import squid.engine.graphics.lighting.Lighting;
 import squid.engine.graphics.Mesh;
 import squid.engine.scene.pieces.GamePiece;
@@ -14,23 +15,20 @@ import java.util.Map;
 public class Scene {
 
     private SkyBox skyBox;
-
     private Vector3f skyBoxAmbientLight;
-
     private Lighting lighting;
-
     private Fog fog;
-
     private Map<Mesh, List<GamePiece>> meshMap;
-
+    private Map<InstancedMesh, List<GamePiece>> instancedMeshMap;
     private IParticleEmitter[] particleEmitters;
 
     public Scene() {
         meshMap = new HashMap<>();
     }
 
-    public void setGamePieces(GamePiece[] gamePieces) {
-        if (gamePieces == null) return;
+    private Map<Mesh, List<GamePiece>> setGamePieces(GamePiece[] gamePieces) {
+        Map<Mesh, List<GamePiece>> meshMap = new HashMap<>();
+        if (gamePieces == null) return meshMap;
         for (GamePiece gamePiece : gamePieces) {
             Mesh mesh = gamePiece.getMesh();
             List<GamePiece> list = meshMap.computeIfAbsent(mesh, k -> new ArrayList<>());
@@ -38,10 +36,23 @@ public class Scene {
                 list.add(gamePiece);
             }
         }
+        return meshMap;
     }
 
     public Map<Mesh, List<GamePiece>> getMeshMap() {
         return meshMap;
+    }
+
+    public void setMeshMap(GamePiece[] gamePieces) {
+        this.meshMap = setGamePieces(gamePieces);
+    }
+
+    public Map<InstancedMesh, List<GamePiece>> getInstancedMeshMap() {
+        return instancedMeshMap;
+    }
+
+    public void setInstancedMeshMap(GamePiece[] gamePieces) {
+
     }
 
     public IParticleEmitter[] getParticleEmitters() {
