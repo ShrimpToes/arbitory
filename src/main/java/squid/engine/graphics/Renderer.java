@@ -88,9 +88,6 @@ public class Renderer {
 
     private SettableIntegerUniform particleTextureSampler;
     private SettableMat4fUniform particleProjectionMatrix;
-    private SettableMat4fUniform particleModelViewMatrix;
-    private SettableFloatUniform particleTexXOffset;
-    private SettableFloatUniform particleTexYOffset;
     private SettableIntegerUniform particleNumRows;
     private SettableIntegerUniform particleNumCols;
 
@@ -149,9 +146,6 @@ public class Renderer {
 
         particleTextureSampler = new SettableIntegerUniform("texture_sampler");
         particleProjectionMatrix = new SettableMat4fUniform("projectionMatrix");
-        particleModelViewMatrix = new SettableMat4fUniform("modelViewMatrix");
-        particleTexXOffset = new SettableFloatUniform("texXOffset");
-        particleTexYOffset = new SettableFloatUniform("texYOffset");
         particleNumRows = new SettableIntegerUniform("numRows");
         particleNumCols = new SettableIntegerUniform("numCols");
 
@@ -202,9 +196,6 @@ public class Renderer {
     private void createParticleUniforms(int programId) throws Exception {
         particleTextureSampler.create(programId);
         particleProjectionMatrix.create(programId);
-        particleModelViewMatrix.create(programId);
-        particleTexXOffset.create(programId);
-        particleTexYOffset.create(programId);
         particleNumRows.create(programId);
         particleNumCols.create(programId);
     }
@@ -400,29 +391,13 @@ public class Renderer {
 
         for (int i = 0; i < numEmitters; i++) {
             IParticleEmitter emitter = emitters[i];
-            Mesh mesh = emitter.getBaseParticle().getMesh();
+            InstancedMesh mesh = (InstancedMesh)emitter.getBaseParticle().getMesh();
+
             Texture text = mesh.getMaterial().getTexture();
-            particleNumRows.setValue(text.getRows());
             particleNumCols.setValue(text.getCols());
-            particleNumRows.set();
-            particleNumCols.set();
+            particleNumRows.setValue(text.getRows());
 
-            mesh.renderList(emitter.getParticles(), (GamePiece gamePiece) -> {
-                int row = gamePiece.getTextPos() / text.getRows();
-                int col = gamePiece.getTextPos() / text.getCols();
-                float texXOffset = (float) col / text.getCols();
-                float texYOffset = (float) row / text.getRows();
-                particleTexXOffset.setValue(texXOffset);
-                particleTexYOffset.setValue(texYOffset);
-                particleTexXOffset.set();
-                particleTexYOffset.set();
-
-                Matrix4f modelMatrix = transformation.buildModelMatrix(gamePiece);
-                viewMatrix.transpose3x3(modelMatrix);
-                Matrix4f modelViewMatrix = transformation.buildModelViewMatrix(modelMatrix, viewMatrix);
-                particleModelViewMatrix.setValue(modelViewMatrix);
-                particleModelViewMatrix.set();
-            });
+            mesh.instancedRender(emitter.getParticles(), true, transformation, viewMatrix, null);
         }
 
         glDepthMask(true);glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);

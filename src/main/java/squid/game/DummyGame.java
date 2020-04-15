@@ -193,14 +193,15 @@ public class DummyGame implements IGame {
     }
 
     private void setupParticles() throws Exception {
+        int maxParticles = 200;
+
         Vector3f particleSpeed = new Vector3f(0, 1, 0);
         particleSpeed.mul(2.5f);
         long ttl = 4000;
-        int maxParticles = 200;
         long creationPeriodMillis = 300;
         float range = 0.2f;
         float scale = 0.25f;
-        Mesh partMesh = OBJReader.loadMesh("/models/particle.obj");
+        Mesh partMesh = OBJReader.loadMesh("/models/particle.obj", maxParticles);
         Texture texture = new Texture("textures/particle_anim.png", 4, 4);
         Material partMaterial = new Material(texture, 1.0f);
         partMesh.setMaterial(partMaterial);

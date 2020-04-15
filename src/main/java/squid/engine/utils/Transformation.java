@@ -1,6 +1,7 @@
 package squid.engine.utils;
 
 import org.joml.Matrix4f;
+import org.joml.Quaternionf;
 import org.joml.Vector3f;
 import squid.engine.scene.pieces.GamePiece;
 
@@ -86,17 +87,17 @@ public class Transformation {
     }
 
     public Matrix4f buildModelMatrix(GamePiece gamePiece) {
-        Vector3f rotation = gamePiece.getRotation();
-        modelMatrix.identity().translate(gamePiece.getPosition())
-                .rotateX((float) Math.toRadians(-rotation.x))
-                .rotateY((float) Math.toRadians(-rotation.y))
-                .rotateZ((float) Math.toRadians(-rotation.z))
-                .scale(gamePiece.getScale());
+        Quaternionf rotation = gamePiece.getRotation();
+        modelMatrix.translationRotateScale(
+                    gamePiece.getPosition().x, gamePiece.getPosition().y, gamePiece.getPosition().z,
+                    rotation.x, rotation.y, rotation.z, rotation.w,
+                    gamePiece.getScale(), gamePiece.getScale(), gamePiece.getScale()
+                );
         return modelMatrix;
     }
 
     public Matrix4f buildModelViewMatrix(GamePiece gamePiece, Matrix4f viewMatrix) {
-        Vector3f rotation = gamePiece.getRotation();
+        Quaternionf rotation = gamePiece.getRotation();
         modelMatrix.identity().translate(gamePiece.getPosition()).
                 rotateX((float)Math.toRadians(-rotation.x)).
                 rotateY((float)Math.toRadians(-rotation.y)).
@@ -112,7 +113,7 @@ public class Transformation {
     }
 
     public Matrix4f buildModelLightViewMatrix(GamePiece gamePiece, Matrix4f matrix) {
-        Vector3f rotation = gamePiece.getRotation();
+        Quaternionf rotation = gamePiece.getRotation();
         modelLightMatrix.identity().translate(gamePiece.getPosition()).
                 rotateX((float)Math.toRadians(-rotation.x)).
                 rotateY((float)Math.toRadians(-rotation.y)).
@@ -128,7 +129,7 @@ public class Transformation {
     }
 
     public Matrix4f buildOrtoProjModelMatrix(GamePiece gamePiece, Matrix4f orthoMatrix) {
-        Vector3f rotation = gamePiece.getRotation();
+        Quaternionf rotation = gamePiece.getRotation();
         modelMatrix.identity().translate(gamePiece.getPosition()).
                 rotateX((float) Math.toRadians(-rotation.x)).
                 rotateY((float) Math.toRadians(-rotation.y)).

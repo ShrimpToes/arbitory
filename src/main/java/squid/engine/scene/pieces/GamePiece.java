@@ -1,19 +1,21 @@
 package squid.engine.scene.pieces;
 
+import org.joml.Quaternionf;
 import org.joml.Vector3f;
 import squid.engine.graphics.Mesh;
 
 public class GamePiece {
 
     private Mesh[] meshes;
-    private final Vector3f position, rotation;
+    private final Vector3f position;
+    private final Quaternionf rotation;
     private float scale;
     private int textPos;
 
     public GamePiece() {
         position = new Vector3f( 0, 0, 0);
         scale = 1;
-        rotation = new Vector3f(0, 0, 0);
+        rotation = new Quaternionf(0, 0, 0, 0);
     }
 
     public GamePiece(Mesh mesh) {
@@ -56,7 +58,7 @@ public class GamePiece {
         this.scale = scale;
     }
 
-    public Vector3f getRotation() {
+    public Quaternionf getRotation() {
         return rotation;
     }
 
@@ -66,8 +68,17 @@ public class GamePiece {
         this.rotation.z = z;
     }
 
+    public void setRotation(float x, float y, float z, float w) {
+        this.setRotation(x, y, z);
+        this.rotation.w = w;
+    }
+
+    public void setRotation(Quaternionf q) {
+        this.rotation.set(q);
+    }
+
     public void setRotation(Vector3f rotation) {
-        this.rotation.set(rotation);
+        setRotation(rotation.x, rotation.y, rotation.z);
     }
 
     public int getTextPos() {
