@@ -11,6 +11,7 @@ import squid.engine.Window;
 import squid.engine.graphics.lighting.*;
 import squid.engine.graphics.Mesh;
 import squid.engine.graphics.textures.Texture;
+import squid.engine.scene.pieces.FastNoise;
 import squid.engine.scene.pieces.Terrain;
 import squid.engine.scene.pieces.animated.AnimGamePiece;
 import squid.engine.scene.pieces.GamePiece;
@@ -70,11 +71,14 @@ public class DummyGame implements IGame {
     private SkyBox skyBox;
     private Scene scene;
     private Lighting lighting;
-    private Terrain terrain;
     private float angleInc;
 
     private AnimGamePiece monster;
     private FlowParticleEmitter particleEmitter;
+
+    private WorldGenerator worldGenerator;
+
+    private FastNoise noise;
 
     public DummyGame() {
         scene = new Scene();
@@ -82,7 +86,9 @@ public class DummyGame implements IGame {
         renderer = new Renderer();
         camera = new Camera();
         cameraInc = new Vector3f();
-        lightAngle = -90;
+        lightAngle = -70;
+        noise = new FastNoise(5);
+        noise.SetFrequency(1f);
     }
 
     @Override
@@ -94,6 +100,8 @@ public class DummyGame implements IGame {
 
         mesh = OBJReader.loadMesh("/models/cube.obj");
         mesh.setMaterial(new Material(new Texture("textures/grassblock.png"), 0.5f));
+
+        worldGenerator = new WorldGenerator((int)(Math.random() * Integer.MAX_VALUE), 0.2f);
 
         Material rock = new Material();
         rock.setTexture(new Texture("textures/rock.png"));
@@ -130,6 +138,23 @@ public class DummyGame implements IGame {
         ground.setScale(8f);
         ground.setPosition(0f, -1.5f, 0f);
 
+        int size = 10;
+
+        GamePiece[] terrain = new GamePiece[size * size];
+        int i = 0;
+        for (int x = 0; x < size; x++) {
+            for (int y = 0; y < size; y++) {
+                float xpos = (float)(x * 5);
+                float ypos = (float)(y * 5);
+
+                WorldGenerator.Chunk chunk = new WorldGenerator.Chunk(xpos, ypos, 5.05f, 5.05f, 10);
+                terrain[i] = worldGenerator.generateChunk(chunk, "textures/terrain.png", 5, 100, 100).getGamePiece();
+                i++;
+            }
+        }
+
+        scene.setMeshMap(terrain);
+
         MD5Model md5Model = MD5Model.parse("/models/monster.md5mesh");
         MD5AnimModel md5Anim = MD5AnimModel.parse("/models/monster.md5anim");
         monster = MD5Reader.loadModel(md5Model, md5Anim, new Vector4f(1, 1, 1, 1));
@@ -139,7 +164,7 @@ public class DummyGame implements IGame {
         setUpLights();
 
 //        gamePieces = new GamePiece[]{cube, rockCube1, rockCube2, quad};
-        gamePieces = new GamePiece[]{monster, quad, ground};
+        gamePieces = new GamePiece[]{monster, quad};
         scene.setMeshMap(gamePieces);
 //        scene.setGamePieces(terrain.getGamePieces());
         scene.setLighting(lighting);
@@ -255,10 +280,10 @@ public class DummyGame implements IGame {
         Vector3f prevPos = new Vector3f(camera.getPosition());
         camera.movePosition(cameraInc.x * CAMERA_POS_STEP,
                 cameraInc.y * CAMERA_POS_STEP, cameraInc.z * CAMERA_POS_STEP);
-        float height = terrain != null ? terrain.getHeight(camera.getPosition()) : -Float.MAX_VALUE;
-        if (camera.getPosition().y <= height) {
-            camera.setPosition(prevPos.x, prevPos.y, prevPos.z);
-        }
+//        float height = terrain != null ? terrain.getHeight(camera.getPosition()) : -Float.MAX_VALUE;
+//        if (camera.getPosition().y <= height) {
+//            camera.setPosition(prevPos.x, prevPos.y, prevPos.z);
+//        }
 
         Vector2f rotVec = mouseInput.getDisplVec();
         camera.moveRotation(rotVec.x * MOUSE_SENSITIVITY, rotVec.y * MOUSE_SENSITIVITY, 0);
@@ -277,7 +302,7 @@ public class DummyGame implements IGame {
         lightDirection.z = zValue;
         lightDirection.normalize();
         float lightAngle = (float)Math.toDegrees(Math.acos(lightDirection.z));
-        hud.setStatusText("LightAngle: " + lightAngle);
+        hud.setStatusText("LightAngle: " + noise.GetPerlin(camera.getPosition().x, camera.getPosition().z));
 
 //        Vector3f currCubeRot = gamePieces[0].getRotation();
 //        currCubeRot.add(1f, 1f, 1f);

@@ -6,6 +6,9 @@ import squid.engine.scene.pieces.HeightMap;
 import squid.engine.graphics.textures.Material;
 import squid.engine.graphics.textures.Texture;
 
+import javax.imageio.ImageIO;
+import javax.imageio.ImageReader;
+import java.awt.image.BufferedImage;
 import java.nio.ByteBuffer;
 import java.nio.IntBuffer;
 import java.util.ArrayList;
@@ -19,24 +22,49 @@ public class HeightMapReader {
     public static final float STARTX = -0.5f;
     public static final float STARTZ = -0.5f;
 
-    public static HeightMap buildMesh(float minY, float maxY, String heightMapFile, String textureFile, int textInc) throws Exception {
-        ByteBuffer buf = null;
+    public static HeightMap buildMesh(float minY, float maxY, String imageFile, String textureFile, int textInc) throws Exception {
         int width;
         int height;
+        ByteBuffer buf;
         try (MemoryStack stack = MemoryStack.stackPush()) {
             IntBuffer w = stack.mallocInt(1);
             IntBuffer h = stack.mallocInt(1);
             IntBuffer channels = stack.mallocInt(1);
 
-            buf = stbi_load(heightMapFile, w, h, channels, 4);
+            buf = stbi_load(imageFile, w, h, channels, 4);
             if (buf == null) {
-                throw new Exception("Image file [" + heightMapFile  + "] not loaded: " + stbi_failure_reason());
+                throw new Exception("Image not loaded: " + stbi_failure_reason());
             }
 
             width = w.get();
             height = h.get();
         }
         Texture texture = new Texture(textureFile);
+
+        float[][] heights = new float[height][width];
+
+        for (int row = 0; row < height; row++) {
+            for (int col = 0; col < width; col++) {
+                // Create vertex for current position
+                float currHeight = getHeight(col, row, width, buf, minY, maxY);
+                heights[row][col] = currHeight;
+            }
+        }
+        
+        Material material = new Material(texture, 0f);
+        stbi_image_free(buf);
+
+        return buildMap(heights, width, height, textInc, minY, maxY, material);
+    }
+
+    public static HeightMap buildMap(float[][] heights, int width, int height, int textInc, float minY, float maxY, Material material) {
+
+        //check that maxY is bigger than minY
+        if (maxY < minY) {
+            float tmp = minY;
+            minY = maxY;
+            maxY = tmp;
+        }
 
         float incx = getXLength() / (width - 1);
         float incz = getZLength() / (height - 1);
@@ -45,15 +73,12 @@ public class HeightMapReader {
         List<Float> textCoords = new ArrayList<>();
         List<Integer> indices = new ArrayList<>();
 
-        float[][] heights = new float[height][width];
-
         for (int row = 0; row < height; row++) {
             for (int col = 0; col < width; col++) {
                 // Create vertex for current position
                 positions.add(STARTX + col * incx); // x
-                float currHeight = getHeight(col, row, width, buf, minY, maxY);
-                heights[row][col] = currHeight;
-                positions.add(currHeight); //y
+
+                positions.add(heights[row][col]); //y
                 positions.add(STARTZ + row * incz); //z
 
                 // Set texture coordinates
@@ -81,11 +106,9 @@ public class HeightMapReader {
         int[] indicesArr = indices.stream().mapToInt(i -> i).toArray();
         float[] textCoordsArr = Utils.listToArray(textCoords);
         float[] normalsArr = calcNormals(posArr, width, height);
-        
-        Material material = new Material(texture, 0f);
-        stbi_image_free(buf);
 
         return new HeightMap(posArr, indicesArr, textCoordsArr, normalsArr, heights, minY, maxY, width, height, material);
+
     }
 
     public static float getXLength() {

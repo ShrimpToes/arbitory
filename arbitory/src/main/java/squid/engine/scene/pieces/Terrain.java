@@ -1,64 +1,49 @@
 package squid.engine.scene.pieces;
 
 import org.joml.Vector3f;
+import squid.engine.graphics.textures.Material;
+import squid.engine.graphics.textures.Texture;
 import squid.engine.utils.HeightMapReader;
+
+import java.awt.image.BufferedImage;
+import java.nio.ByteBuffer;
 
 public class Terrain {
 
-    private final GamePiece[] gamePieces;
+    private final GamePiece gamePiece;
+    private final Box2D boundingBox;
     private final HeightMap heightMap;
-    private final int blocksPerRow;
-    private final Box2D[][] boundingBoxes;
     private final int verticesPerCol;
     private final int verticesPerRow;
 
-    @SuppressWarnings("unchecked")
-    public Terrain(int blocksPerRow, float scale, float minY, float maxY, String heightMapFile, String textureFile, int textInc) throws Exception {
+    public Terrain(float scale, float minY, float maxY, HeightMap heightMap) throws Exception {
 
-        this.blocksPerRow = blocksPerRow;
-        boundingBoxes = new Box2D[blocksPerRow][blocksPerRow];
+        //make maxY greater than minY
 
-        gamePieces = new GamePiece[blocksPerRow * blocksPerRow];
-
-        heightMap = HeightMapReader.buildMesh(minY, maxY, heightMapFile, textureFile, textInc);
+        this.heightMap = heightMap;
         verticesPerCol = heightMap.verticesPerColumn;
         verticesPerRow = heightMap.verticesPerRow;
 
-        for (int row = 0; row < blocksPerRow; row++) {
-            for (int col = 0; col < blocksPerRow; col++) {
-                float xDisplacement = (col - ((float) blocksPerRow - 1) / (float) 2) * scale * HeightMapReader.getXLength();
-                float zDisplacement = (row - ((float) blocksPerRow - 1) / (float) 2) * scale * HeightMapReader.getZLength();
+        gamePiece = new GamePiece(heightMap);
+        gamePiece.setScale(scale);
 
-                GamePiece terrainBlock = new GamePiece(heightMap);
-                terrainBlock.setScale(scale);
-                terrainBlock.setPosition(xDisplacement, 0, zDisplacement);
-                gamePieces[row * blocksPerRow + col] = terrainBlock;
-                boundingBoxes[row][col] = getBoundingBox(terrainBlock);
-            }
-        }
+        boundingBox = new Box2D(gamePiece.getPosition().x, gamePiece.getPosition().y, gamePiece.getScale(), maxY - minY);
+    }
+
+    public Terrain(float scale, float minY, float maxY, String heightMapFile, String textureFile, int textInc) throws Exception {
+        this(scale, minY, maxY, HeightMapReader.buildMesh(minY, maxY, heightMapFile, textureFile, textInc));
+    }
+
+    public Terrain(float scale, float minY, float maxY, float[][] heights, int width, int height, String textureFile, int textInc) throws Exception {
+        this(scale, minY, maxY, HeightMapReader.buildMap(heights, width, height, textInc, minY, maxY, new Material(new Texture(textureFile))));
     }
 
     public float getHeight(Vector3f position) {
-        float result = Float.MIN_VALUE;
-        // For each terrain block we get the bounding box, translate it to view coodinates
-        // and check if the position is contained in that bounding box
-        Box2D boundingBox = null;
-        boolean found = false;
-        GamePiece terrainBlock = null;
-        for (int row = 0; row < blocksPerRow && !found; row++) {
-            for (int col = 0; col < blocksPerRow && !found; col++) {
-                terrainBlock = gamePieces[row * blocksPerRow + col];
-                boundingBox = boundingBoxes[row][col];
-                found = boundingBox.contains(position.x, position.z);
-            }
-        }
+        float result;
 
-        // If we have found a terrain block that contains the position we need
-        // to calculate the height of the terrain on that position
-        if (found) {
-            Vector3f[] triangle = getTriangle(position, boundingBox, terrainBlock);
-            result = interpolateHeight(triangle[0], triangle[1], triangle[2], position.x, position.z);
-        }
+        Vector3f[] triangle = getTriangle(position, boundingBox, gamePiece);
+        result = interpolateHeight(triangle[0], triangle[1], triangle[2], position.x, position.z);
+
 
         return result;
     }
@@ -127,11 +112,11 @@ public class Terrain {
         return boundingBox;
     }
 
-    public GamePiece[] getGamePieces() {
-        return gamePieces;
+    public GamePiece getGamePiece() {
+        return gamePiece;
     }
 
-    static class Box2D {
+    public static class Box2D {
 
         public float x;
 

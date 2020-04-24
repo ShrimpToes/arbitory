@@ -4,6 +4,8 @@ plugins {
 }
 
 allprojects {
+    version 'alpha-0.0.1'
+
     repositories {
         mavenCentral()
         jcenter()
@@ -11,7 +13,6 @@ allprojects {
 }
 
 subprojects {
-    version 'alpha-0.0.1'
 
     sourceCompatibility = 1.8
 }

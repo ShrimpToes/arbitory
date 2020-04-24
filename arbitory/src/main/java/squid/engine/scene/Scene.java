@@ -27,7 +27,6 @@ public class Scene {
     }
 
     private Map<Mesh, List<GamePiece>> setGamePieces(GamePiece[] gamePieces) {
-        Map<Mesh, List<GamePiece>> meshMap = new HashMap<>();
         if (gamePieces == null) return meshMap;
         for (GamePiece gamePiece : gamePieces) {
             Mesh mesh = gamePiece.getMesh();
