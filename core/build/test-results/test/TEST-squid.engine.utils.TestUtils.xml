@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="squid.engine.utils.TestUtils" tests="3" skipped="0" failures="0" errors="0" timestamp="2020-08-08T04:38:33" hostname="LAPTOP-J4IR2K0F" time="0.004">
+  <properties/>
+  <testcase name="testListToArray" classname="squid.engine.utils.TestUtils" time="0.003"/>
+  <testcase name="testCombineArrays" classname="squid.engine.utils.TestUtils" time="0.001"/>
+  <testcase name="testFillToSize" classname="squid.engine.utils.TestUtils" time="0.0"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

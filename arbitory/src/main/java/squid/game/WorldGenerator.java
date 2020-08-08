@@ -1,7 +1,16 @@
 package squid.game;
 
+import org.joml.Vector3f;
+import squid.engine.graphics.textures.Material;
+import squid.engine.graphics.textures.Texture;
 import squid.engine.scene.pieces.FastNoise;
+import squid.engine.scene.pieces.HeightMap;
 import squid.engine.scene.pieces.Terrain;
+import squid.engine.utils.HeightMapReader;
+import squid.engine.utils.Utils;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class WorldGenerator {
     private FastNoise noise;
@@ -11,40 +20,105 @@ public class WorldGenerator {
         noise.SetFrequency(frequency);
     }
 
-    public Terrain generateChunk(Chunk chunk, String textureFile, int textInc, int stepsX, int stepsY) throws Exception {
+    public Terrain generateChunk(World.Chunk chunk, WorldGenData gendata) throws Exception {
 
-        float currHeight;
-        float [][] heights = new float[stepsX][stepsY];
-        int currStepX = 0;
+        int stepsX = gendata.stepsX;
+        int stepsY = gendata.stepsY;
+
+        noise.SetNoiseType(gendata.noiseType);
+        Vector3f[][] positions = new Vector3f[stepsX][stepsY];
 
         float stepXSize = chunk.xWidth / stepsX;
-        float stepYSize = chunk.yWidth / stepsY;
+        float stepYSize = chunk.zWidth / stepsY;
 
-        for (float x = chunk.x; x <= chunk.xWidth + chunk.x - (stepXSize / 2); x+= stepXSize) {
-            int currStepY = 0;
-            for (float y = chunk.z; y <= chunk.yWidth + chunk.z - (stepYSize / 2); y+= stepYSize) {
-                currHeight = noise.GetCubicFractal(x, y);
-                heights[currStepX][currStepY] = currHeight;
-                currStepY++;
+        for (int currStepX = 0; currStepX < stepsX; currStepX++) {
+            float xpos = currStepX * stepXSize;
+            float currX = chunk.x + xpos;
+            for (int currStepY = 0; currStepY < stepsY; currStepY++) {
+                float zpos = currStepY * stepYSize;
+                float currZ = chunk.z + zpos;
+
+                float currHeight = noise.GetNoise(currX, currZ);
+
+                currHeight++;
+                currHeight = currHeight / 2;
+                currHeight = currHeight * chunk.height;
+
+                positions[currStepX][currStepY] = new Vector3f(xpos, currHeight, zpos);
             }
-            currStepX++;
         }
+        Material material = new Material(new Texture(gendata.textureFile));
 
-        Terrain terrainchunk = new Terrain(chunk.xWidth, 0, chunk.height, heights, stepsX, stepsY, textureFile, textInc);
+        Terrain terrainchunk = new Terrain(chunk.xWidth, 0, chunk.height,
+                buildMap(positions, gendata.textInc, stepsX, stepsY, 0, chunk.height, material));
         terrainchunk.getGamePiece().setPosition(chunk.z, 0, chunk.x);
+        terrainchunk.getGamePiece().setScale(1);
         return terrainchunk;
     }
 
+    private HeightMap buildMap(Vector3f[][] positions, int textInc, int stepsX, int stepsY, float minY, float maxY, Material material) {
+        List<Float> textCoords = new ArrayList<>();
+        List<Float> vertices = new ArrayList<>();
+        List<Integer> indices = new ArrayList<>();
 
-    public static class Chunk {
-        public float x, z, xWidth, yWidth, height;
+        float[][] heights = new float[stepsX][stepsY];
 
-        public Chunk(float x, float z, float xWidth, float yWidth, float height) {
-            this.x = x;
-            this.z = z;
-            this.xWidth = xWidth;
-            this.yWidth = yWidth;
-            this.height = height;
+        for (int row = 0; row  < stepsX; row++) {
+            for (int col = 0; col < stepsY; col++) {
+                Vector3f currPos = positions[row][col];
+
+                textCoords.add((float) textInc * (float) col / (float) stepsX);
+                textCoords.add((float) textInc * (float) row / (float) stepsY);
+
+                heights[row][col] = currPos.y;
+
+                vertices.add(currPos.x);
+                vertices.add(currPos.y);
+                vertices.add(currPos.z);
+
+                if (col < stepsX - 1 && row < stepsY - 1) {
+                    int leftTop = row * stepsX + col;
+                    int leftBottom = (row + 1) * stepsX + col;
+                    int rightBottom = (row + 1) * stepsX + col + 1;
+                    int rightTop = row * stepsX + col + 1;
+
+                    indices.add(leftTop);
+                    indices.add(leftBottom);
+                    indices.add(rightTop);
+
+                    indices.add(rightTop);
+                    indices.add(leftBottom);
+                    indices.add(rightBottom);
+                }
+            }
         }
+
+        float[] verticesArr = Utils.listToArray(vertices);
+        int[] indicesArr = indices.stream().mapToInt(i -> i).toArray();
+        float[] textCoordsArr = Utils.listToArray(textCoords);
+        float[] normalsArr = HeightMapReader.calcNormals(verticesArr, stepsX, stepsY);
+
+        return new HeightMap(verticesArr, indicesArr, textCoordsArr, normalsArr, heights, minY, maxY, stepsY, stepsX, material);
+    }
+
+    public static class WorldGenData {
+
+        public WorldGenData() {
+
+        };
+
+        public WorldGenData(String textureFile, int stepsX, int stepsY, int textInc, FastNoise.NoiseType noiseType) {
+            this.textureFile = textureFile;
+            this.stepsX = stepsX;
+            this.stepsY = stepsY;
+            this.textInc = textInc;
+            this.noiseType = noiseType;
+        }
+
+        public String textureFile;
+        public int stepsX;
+        public int stepsY;
+        public int textInc;
+        public FastNoise.NoiseType noiseType;
     }
 }

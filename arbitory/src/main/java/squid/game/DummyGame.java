@@ -3,26 +3,31 @@ package squid.game;
 import org.joml.Vector2f;
 import org.joml.Vector3f;
 import org.joml.Vector4f;
-import squid.engine.graphics.textures.Material;
-import squid.engine.scene.*;
 import squid.engine.IGame;
-import squid.engine.graphics.*;
 import squid.engine.Window;
-import squid.engine.graphics.lighting.*;
+import squid.engine.events.EventRegistry;
 import squid.engine.graphics.Mesh;
+import squid.engine.graphics.Renderer;
+import squid.engine.graphics.lighting.DirectionalLight;
+import squid.engine.graphics.lighting.Lighting;
+import squid.engine.graphics.lighting.PointLight;
+import squid.engine.graphics.lighting.SpotLight;
+import squid.engine.graphics.textures.Material;
 import squid.engine.graphics.textures.Texture;
+import squid.engine.scene.Fog;
+import squid.engine.scene.Scene;
+import squid.engine.scene.SkyBox;
 import squid.engine.scene.pieces.FastNoise;
-import squid.engine.scene.pieces.Terrain;
-import squid.engine.scene.pieces.animated.AnimGamePiece;
 import squid.engine.scene.pieces.GamePiece;
+import squid.engine.scene.pieces.animated.AnimGamePiece;
 import squid.engine.scene.pieces.particle.FlowParticleEmitter;
 import squid.engine.scene.pieces.particle.Particle;
 import squid.engine.utils.Camera;
 import squid.engine.utils.MouseInput;
 import squid.engine.utils.readers.md5.MD5AnimModel;
-import squid.engine.utils.readers.obj.OBJReader;
 import squid.engine.utils.readers.md5.MD5Model;
 import squid.engine.utils.readers.md5.MD5Reader;
+import squid.engine.utils.readers.obj.OBJReader;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -79,6 +84,8 @@ public class DummyGame implements IGame {
     private WorldGenerator worldGenerator;
 
     private FastNoise noise;
+    private World world;
+    private int steps = 100;
 
     public DummyGame() {
         scene = new Scene();
@@ -86,9 +93,10 @@ public class DummyGame implements IGame {
         renderer = new Renderer();
         camera = new Camera();
         cameraInc = new Vector3f();
-        lightAngle = -70;
+        lightAngle = 70;
         noise = new FastNoise(5);
         noise.SetFrequency(1f);
+        EventRegistry.register(Events.class);
     }
 
     @Override
@@ -101,7 +109,7 @@ public class DummyGame implements IGame {
         mesh = OBJReader.loadMesh("/models/cube.obj");
         mesh.setMaterial(new Material(new Texture("textures/grassblock.png"), 0.5f));
 
-        worldGenerator = new WorldGenerator((int)(Math.random() * Integer.MAX_VALUE), 0.2f);
+        worldGenerator = new WorldGenerator((int)(Math.random() * Integer.MAX_VALUE), 0.1f);
 
         Material rock = new Material();
         rock.setTexture(new Texture("textures/rock.png"));
@@ -138,22 +146,16 @@ public class DummyGame implements IGame {
         ground.setScale(8f);
         ground.setPosition(0f, -1.5f, 0f);
 
-        int size = 10;
+        Vector3f startPos = new Vector3f(0, 0, 0);
 
-        GamePiece[] terrain = new GamePiece[size * size];
-        int i = 0;
-        for (int x = 0; x < size; x++) {
-            for (int y = 0; y < size; y++) {
-                float xpos = (float)(x * 5);
-                float ypos = (float)(y * 5);
+        world = new World(worldGenerator, 5, 10, 3);
 
-                WorldGenerator.Chunk chunk = new WorldGenerator.Chunk(xpos, ypos, 5.05f, 5.05f, 10);
-                terrain[i] = worldGenerator.generateChunk(chunk, "textures/terrain.png", 5, 100, 100).getGamePiece();
-                i++;
-            }
-        }
+        WorldGenerator.WorldGenData data = new WorldGenerator.WorldGenData("textures/terrain.png", steps, steps, 5, FastNoise.NoiseType.Perlin);
+//        world.generateStartingTerrain(data);
 
-        scene.setMeshMap(terrain);
+//        for (Terrain terrain : world.getVisibleTerrain(camera.getPosition())) {
+//            gamePieceList.add(terrain.getGamePiece());
+//        }
 
         MD5Model md5Model = MD5Model.parse("/models/monster.md5mesh");
         MD5AnimModel md5Anim = MD5AnimModel.parse("/models/monster.md5anim");
@@ -163,8 +165,12 @@ public class DummyGame implements IGame {
 
         setUpLights();
 
-//        gamePieces = new GamePiece[]{cube, rockCube1, rockCube2, quad};
-        gamePieces = new GamePiece[]{monster, quad};
+        gamePieceList.add(monster);
+        gamePieceList.add(quad);
+
+
+        gamePieces = new GamePiece[]{cube, rockCube1, rockCube2, quad};
+//        gamePieces = (GamePiece[]) gamePieceList.toArray();
         scene.setMeshMap(gamePieces);
 //        scene.setGamePieces(terrain.getGamePieces());
         scene.setLighting(lighting);
@@ -206,7 +212,7 @@ public class DummyGame implements IGame {
         lightPosition = new Vector3f(0, 1, 1);
         lightColor = new Vector3f(1, 1, 1);
         directionalLight = new DirectionalLight(lightColor, lightPosition, lightIntensity);
-        directionalLight.setShadowPosMult(5f);
+        directionalLight.setShadowPosMult(15f);
         directionalLight.setOrthoCords(-10.0f, 10.0f, -10.0f, 10.0f, -1.0f, 20.0f);
 
         lighting.setAmbientLight(ambientLight);
@@ -275,7 +281,7 @@ public class DummyGame implements IGame {
 
     @Override
     public void update(float interval, MouseInput mouseInput) {
-//        updateDirectionalLight();
+        //  updateDirectionalLight();
         particleEmitter.update((long) interval);
         Vector3f prevPos = new Vector3f(camera.getPosition());
         camera.movePosition(cameraInc.x * CAMERA_POS_STEP,
@@ -302,7 +308,7 @@ public class DummyGame implements IGame {
         lightDirection.z = zValue;
         lightDirection.normalize();
         float lightAngle = (float)Math.toDegrees(Math.acos(lightDirection.z));
-        hud.setStatusText("LightAngle: " + noise.GetPerlin(camera.getPosition().x, camera.getPosition().z));
+        hud.setStatusText("LightAngle: " + lightAngle);
 
 //        Vector3f currCubeRot = gamePieces[0].getRotation();
 //        currCubeRot.add(1f, 1f, 1f);
