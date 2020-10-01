@@ -1,4 +1,4 @@
-package squid.game;
+package squid.engine.scene;
 
 import org.joml.Vector3f;
 import squid.engine.graphics.textures.Material;
@@ -28,8 +28,8 @@ public class WorldGenerator {
         noise.SetNoiseType(gendata.noiseType);
         Vector3f[][] positions = new Vector3f[stepsX][stepsY];
 
-        float stepXSize = chunk.xWidth / stepsX;
-        float stepYSize = chunk.zWidth / stepsY;
+        float stepXSize = chunk.xWidth / (stepsX - 1);
+        float stepYSize = chunk.zWidth / (stepsY - 1);
 
         for (int currStepX = 0; currStepX < stepsX; currStepX++) {
             float xpos = currStepX * stepXSize;
@@ -47,7 +47,7 @@ public class WorldGenerator {
                 positions[currStepX][currStepY] = new Vector3f(xpos, currHeight, zpos);
             }
         }
-        Material material = new Material(new Texture(gendata.textureFile));
+        Material material = new Material();
 
         Terrain terrainchunk = new Terrain(chunk.xWidth, 0, chunk.height,
                 buildMap(positions, gendata.textInc, stepsX, stepsY, 0, chunk.height, material));
@@ -72,9 +72,9 @@ public class WorldGenerator {
 
                 heights[row][col] = currPos.y;
 
-                vertices.add(currPos.x);
-                vertices.add(currPos.y);
                 vertices.add(currPos.z);
+                vertices.add(currPos.y);
+                vertices.add(currPos.x);
 
                 if (col < stepsX - 1 && row < stepsY - 1) {
                     int leftTop = row * stepsX + col;

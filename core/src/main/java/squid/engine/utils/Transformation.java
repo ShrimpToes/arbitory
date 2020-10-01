@@ -128,7 +128,7 @@ public class Transformation {
         return modelLightViewMatrix.mul(modelMatrix);
     }
 
-    public Matrix4f buildOrtoProjModelMatrix(GamePiece gamePiece, Matrix4f orthoMatrix) {
+    public Matrix4f buildOrthoProjModelMatrix(GamePiece gamePiece, Matrix4f orthoMatrix) {
         Quaternionf rotation = gamePiece.getRotation();
         modelMatrix.identity().translate(gamePiece.getPosition()).
                 rotateX((float) Math.toRadians(-rotation.x)).

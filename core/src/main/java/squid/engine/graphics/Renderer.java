@@ -240,23 +240,23 @@ public class Renderer {
         createParticleUniforms(particleShader.getProgramId());
     }
 
-    public void render(Window window, Camera camera, Scene scene, IHud hud) throws Exception {
+    public void render(Camera camera, Scene scene, IHud hud) throws Exception {
         clear();
 
-        renderDepthMap(window, scene, camera);
+        renderDepthMap(scene, camera);
 
-        glViewport(0, 0, window.getWidth(), window.getHeight());
+        glViewport(0, 0, Window.getWidth(), Window.getHeight());
 
-        transformation.updateProjectionMatrix(FOV, window.getWidth(), window.getHeight(), Z_NEAR, Z_FAR);
+        transformation.updateProjectionMatrix(FOV, Window.getWidth(), Window.getHeight(), Z_NEAR, Z_FAR);
         transformation.updateViewMatrix(camera);
 
         renderScene(scene);
         renderParticles(scene);
 //        renderSkyBox(scene);
-        renderHud(window, hud);
+        renderHud(hud);
     }
 
-    public void renderDepthMap(Window window, Scene scene, Camera camera) {
+    public void renderDepthMap(Scene scene, Camera camera) {
         glBindFramebuffer(GL_FRAMEBUFFER, shadowMap.getDepthMapFBO());
         glViewport(0, 0, ShadowMap.SHADOW_MAP_WIDTH, ShadowMap.SHADOW_MAP_HEIGHT);
 
@@ -485,16 +485,16 @@ public class Renderer {
         directionalLight.set();
     }
 
-    private void renderHud(Window window, IHud hud) throws Exception {
+    private void renderHud(IHud hud) throws Exception {
 
         hudShader.bind();
 
-        Matrix4f ortho = transformation.getOrtho2dProjectionMatrix(0, window.getWidth(), window.getHeight(), 0);
+        Matrix4f ortho = transformation.getOrtho2dProjectionMatrix(0, Window.getWidth(), Window.getHeight(), 0);
         for (GamePiece gamePiece : hud.getGamePieces()) {
             Mesh mesh = gamePiece.getMesh();
             // Set ortohtaphic and model matrix for this HUD item
 
-            projModelMatrix.setValue(transformation.buildOrtoProjModelMatrix(gamePiece, ortho));
+            projModelMatrix.setValue(transformation.buildOrthoProjModelMatrix(gamePiece, ortho));
             color.setValue(gamePiece.getMesh().getMaterial().getAmbientColour());
 
             projModelMatrix.set();

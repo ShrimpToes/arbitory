@@ -44,7 +44,6 @@ public class Terrain {
         Vector3f[] triangle = getTriangle(position, boundingBox, gamePiece);
         result = interpolateHeight(triangle[0], triangle[1], triangle[2], position.x, position.z);
 
-
         return result;
     }
 

@@ -163,9 +163,6 @@ public class Mesh {
         glEnableVertexAttribArray(2);
         glEnableVertexAttribArray(3);
         glEnableVertexAttribArray(4);
-
-
-
     }
 
     public void render() {

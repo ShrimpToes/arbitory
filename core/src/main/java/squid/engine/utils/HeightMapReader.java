@@ -189,7 +189,7 @@ public class HeightMapReader {
                     normal.normalize();
                 } else {
                     normal.x = 0;
-                    normal.y = 1;
+                    normal.y = -1;
                     normal.z = 0;
                 }
                 normal.normalize();

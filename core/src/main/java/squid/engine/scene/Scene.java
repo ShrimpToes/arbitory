@@ -21,6 +21,7 @@ public class Scene {
     private Map<Mesh, List<GamePiece>> meshMap;
     private Map<InstancedMesh, List<GamePiece>> instancedMeshMap;
     private IParticleEmitter[] particleEmitters;
+    private World world;
 
     public Scene() {
         meshMap = new HashMap<>();
@@ -52,6 +53,14 @@ public class Scene {
 
     public void setInstancedMeshMap(GamePiece[] gamePieces) {
 
+    }
+
+    public void setWorld(World world) {
+        this.world = world;
+    }
+
+    public World getWorld() {
+        return world;
     }
 
     public IParticleEmitter[] getParticleEmitters() {
