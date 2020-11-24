@@ -2,8 +2,9 @@ package squid.engine.utils.readers.obj;
 
 import org.joml.Vector2f;
 import org.joml.Vector3f;
-import squid.engine.graphics.InstancedMesh;
-import squid.engine.graphics.Mesh;
+import squid.engine.graphics.meshes.InstancedMesh;
+import squid.engine.graphics.meshes.Mesh;
+import squid.engine.graphics.meshes.MeshBuilder;
 import squid.engine.utils.Utils;
 
 import java.util.ArrayList;
@@ -11,11 +12,19 @@ import java.util.List;
 
 public class OBJReader {
 
+    public static MeshBuilder.MeshBuffer loadMesh(String filename, MeshBuilder.MeshBuffer buffer) throws Exception {
+        return loadMesh(filename, 1, new MeshBuilder.MeshBuffer());
+    }
+
     public static Mesh loadMesh(String filename) throws Exception {
         return loadMesh(filename, 1);
     }
 
-    public static Mesh loadMesh(String fileName, int instances) throws Exception {
+    public static Mesh loadMesh(String filename, int instances) throws Exception {
+        return loadMesh(filename, instances, new MeshBuilder.MeshBuffer()).buildMesh();
+    }
+
+    public static MeshBuilder.MeshBuffer loadMesh(String fileName, int instances, MeshBuilder.MeshBuffer buffer) throws Exception {
         List<String> lines = Utils.readAllLines(fileName);
 
         List<Vector3f> vertices = new ArrayList<>();
@@ -57,11 +66,12 @@ public class OBJReader {
                     break;
             }
         }
-        return reorderLists(vertices, textures, normals, faces, instances);
+
+        return reorderLists(vertices, textures, normals, faces, instances, buffer);
     }
 
-    private static Mesh reorderLists(List<Vector3f> posList, List<Vector2f> textCoordList,
-                                     List<Vector3f> normList, List<Face> facesList, int instances) {
+    private static MeshBuilder.MeshBuffer reorderLists(List<Vector3f> posList, List<Vector2f> textCoordList,
+                                                       List<Vector3f> normList, List<Face> facesList, int instances, MeshBuilder.MeshBuffer buffer) {
 
         List<Integer> indices = new ArrayList<>();
         // Create position array in the order it has been declared
@@ -85,13 +95,14 @@ public class OBJReader {
         }
         int[] indicesArray = new int[indices.size()];
         indicesArray = indices.stream().mapToInt((Integer v) -> v).toArray();
-        Mesh mesh;
-        if (instances > 1) {
-            mesh = new InstancedMesh(posArr, indicesArray, textCoordArray, normArray, instances);
-        } else {
-            mesh = new Mesh(posArr, indicesArray, textCoordArray, normArray);
-        }
-        return mesh;
+
+        buffer.verticesarr = posArr;
+        buffer.indicesarr = indicesArray;
+        buffer.textCoordsarr = textCoordArray;
+        buffer.normalsarr = normArray;
+        buffer.instances = instances;
+
+        return buffer;
     }
 
     private static void processFaceVertex(IdxGroup indices, List<Vector2f> textCoordList,

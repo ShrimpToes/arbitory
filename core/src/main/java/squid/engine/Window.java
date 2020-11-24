@@ -14,7 +14,7 @@ import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.opengl.GL11C.*;
 
 public class Window {
-    private long window;
+    public static long window;
     private String name;
     private static int  width = 900;
     private static int height = 900;

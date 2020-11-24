@@ -1,12 +1,11 @@
 package squid.engine.scene.pieces;
 
 import org.joml.Vector3f;
+import squid.engine.graphics.meshes.HeightMap;
+import squid.engine.graphics.meshes.MeshBuilder;
 import squid.engine.graphics.textures.Material;
 import squid.engine.graphics.textures.Texture;
 import squid.engine.utils.HeightMapReader;
-
-import java.awt.image.BufferedImage;
-import java.nio.ByteBuffer;
 
 public class Terrain {
 
@@ -30,6 +29,19 @@ public class Terrain {
         boundingBox = new Box2D(gamePiece.getPosition().x, gamePiece.getPosition().y, gamePiece.getScale(), maxY - minY);
     }
 
+    public Terrain(float scale, float minY, float maxY, MeshBuilder.HeightMapMeshBuffer meshBuffer) {
+        this.heightMap = null;
+
+        verticesPerCol = meshBuffer.verticesPerCol;
+        verticesPerRow = meshBuffer.verticesPerRow;
+
+        gamePiece = meshBuffer.gamePiece;
+
+        boundingBox = new Box2D(gamePiece.getPosition().x, gamePiece.getPosition().y, gamePiece.getScale(), maxY - minY);
+
+        MeshBuilder.addMesh(meshBuffer);
+    }
+
     public Terrain(float scale, float minY, float maxY, String heightMapFile, String textureFile, int textInc) throws Exception {
         this(scale, minY, maxY, HeightMapReader.buildMesh(minY, maxY, heightMapFile, textureFile, textInc));
     }
@@ -48,6 +60,12 @@ public class Terrain {
     }
 
     protected Vector3f[] getTriangle(Vector3f position, Box2D boundingBox, GamePiece terrainBlock) {
+
+        if (heightMap == null) { return new Vector3f[]{
+                new Vector3f(0, 0, 0),
+                new Vector3f(1, 0, 0),
+                new Vector3f(0, 0, 1)}; }
+
         // Get the column and row of the heightmap associated to the current position
         float cellWidth = boundingBox.width / (float) verticesPerCol;
         float cellHeight = boundingBox.height / (float) verticesPerRow;
@@ -109,6 +127,10 @@ public class Terrain {
         float height = Math.abs(HeightMapReader.STARTZ * 2) * scale;
         Box2D boundingBox = new Box2D(topLeftX, topLeftZ, width, height);
         return boundingBox;
+    }
+
+    public boolean isBuilt() {
+        return gamePiece.hasMesh();
     }
 
     public GamePiece getGamePiece() {

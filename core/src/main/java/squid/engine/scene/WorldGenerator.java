@@ -1,10 +1,11 @@
 package squid.engine.scene;
 
 import org.joml.Vector3f;
+import squid.engine.graphics.meshes.MeshBuilder;
 import squid.engine.graphics.textures.Material;
-import squid.engine.graphics.textures.Texture;
 import squid.engine.scene.pieces.FastNoise;
-import squid.engine.scene.pieces.HeightMap;
+import squid.engine.graphics.meshes.HeightMap;
+import squid.engine.scene.pieces.GamePiece;
 import squid.engine.scene.pieces.Terrain;
 import squid.engine.utils.HeightMapReader;
 import squid.engine.utils.Utils;
@@ -21,12 +22,12 @@ public class WorldGenerator {
     }
 
     public Terrain generateChunk(World.Chunk chunk, WorldGenData gendata) throws Exception {
-
         int stepsX = gendata.stepsX;
         int stepsY = gendata.stepsY;
 
         noise.SetNoiseType(gendata.noiseType);
         Vector3f[][] positions = new Vector3f[stepsX][stepsY];
+
 
         float stepXSize = chunk.xWidth / (stepsX - 1);
         float stepYSize = chunk.zWidth / (stepsY - 1);
@@ -44,19 +45,22 @@ public class WorldGenerator {
                 currHeight = currHeight / 2;
                 currHeight = currHeight * chunk.height;
 
-                positions[currStepX][currStepY] = new Vector3f(xpos, currHeight, zpos);
+                positions[currStepX][currStepY] = new Vector3f(zpos, currHeight, xpos);
             }
         }
-        Material material = new Material();
 
-        Terrain terrainchunk = new Terrain(chunk.xWidth, 0, chunk.height,
-                buildMap(positions, gendata.textInc, stepsX, stepsY, 0, chunk.height, material));
-        terrainchunk.getGamePiece().setPosition(chunk.z, 0, chunk.x);
-        terrainchunk.getGamePiece().setScale(1);
-        return terrainchunk;
+        Material material = new Material();
+        MeshBuilder.MaterialBuffer materialBuffer = new MeshBuilder.MaterialBuffer(material, gendata.textureFile);
+
+        GamePiece terrainPiece = new GamePiece();
+        terrainPiece.setPosition(chunk.x, 0, chunk.z);
+        terrainPiece.setScale(1);
+
+        return new Terrain(chunk.xWidth, 0, chunk.height,
+                buildMap(positions, gendata.textInc, stepsX, stepsY, 0, chunk.height, materialBuffer, terrainPiece));
     }
 
-    private HeightMap buildMap(Vector3f[][] positions, int textInc, int stepsX, int stepsY, float minY, float maxY, Material material) {
+    private MeshBuilder.HeightMapMeshBuffer buildMap(Vector3f[][] positions, int textInc, int stepsX, int stepsY, float minY, float maxY, MeshBuilder.MaterialBuffer materialBuffer, GamePiece gamePiece) {
         List<Float> textCoords = new ArrayList<>();
         List<Float> vertices = new ArrayList<>();
         List<Integer> indices = new ArrayList<>();
@@ -98,7 +102,7 @@ public class WorldGenerator {
         float[] textCoordsArr = Utils.listToArray(textCoords);
         float[] normalsArr = HeightMapReader.calcNormals(verticesArr, stepsX, stepsY);
 
-        return new HeightMap(verticesArr, indicesArr, textCoordsArr, normalsArr, heights, minY, maxY, stepsY, stepsX, material);
+        return new MeshBuilder.HeightMapMeshBuffer(verticesArr, indicesArr, textCoordsArr, normalsArr, heights, minY, maxY, stepsY, stepsX, gamePiece, materialBuffer);
     }
 
     public static class WorldGenData {

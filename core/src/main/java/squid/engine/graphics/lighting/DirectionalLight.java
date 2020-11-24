@@ -5,6 +5,7 @@ import squid.engine.graphics.uniforms.supplied.FloatUniform;
 import squid.engine.graphics.uniforms.supplied.SuppliedUniform;
 import squid.engine.graphics.uniforms.Uniformable;
 import squid.engine.graphics.uniforms.supplied.Vec3fUniform;
+import squid.engine.utils.Camera;
 
 import java.util.function.Supplier;
 
@@ -46,13 +47,17 @@ public class DirectionalLight implements Uniformable {
         return orthoCoords;
     }
 
-    public void setOrthoCords(float left, float right, float bottom, float top, float near, float far) {
+    public void setOrthoCoords(float left, float right, float bottom, float top, float near, float far) {
         orthoCoords.left = left;
         orthoCoords.right = right;
         orthoCoords.bottom = bottom;
         orthoCoords.top = top;
         orthoCoords.near = near;
         orthoCoords.far = far;
+    }
+
+    public void setOrthoCoords(Vector3f position, float near, float far) {
+        setOrthoCoords(position.x - 10, position.x + 10, -position.z - 10, -position.z + 10, near, far);
     }
 
     public Vector3f getColor() {

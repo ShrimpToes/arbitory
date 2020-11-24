@@ -1,7 +1,7 @@
 package squid.engine.scene.pieces.particle;
 
 import org.joml.Vector3f;
-import squid.engine.graphics.Mesh;
+import squid.engine.graphics.meshes.Mesh;
 import squid.engine.graphics.textures.Texture;
 import squid.engine.scene.pieces.GamePiece;
 

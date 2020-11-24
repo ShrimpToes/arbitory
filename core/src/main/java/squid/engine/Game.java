@@ -2,6 +2,7 @@ package squid.engine;
 
 import squid.engine.events.Event;
 import squid.engine.events.EventRegistry;
+import squid.engine.graphics.meshes.MeshBuilder;
 import squid.engine.utils.MouseInput;
 import squid.engine.Window;
 import squid.engine.IGame;
@@ -41,6 +42,7 @@ public class Game implements Runnable{
         tick.intervalmillis = (long) interval;
 //        EventRegistry.callEvent(tick); //TODO: fix (nullpointer name cannot be null for thread?
         game.update(interval, mouseInput);
+        MeshBuilder.buildMeshes(5);
     }
 
     protected void render() throws Exception {
@@ -80,11 +82,11 @@ public class Game implements Runnable{
 
             render();
 
-//            sync(loopStart);
+//            sync(loopStart, msPerFrame);
         }
     }
 
-    private static void sync(double loopStartTime) {
+    private static void sync(double loopStartTime, double msPerFrame) {
         double endTime = loopStartTime + msPerFrame;
         while(System.currentTimeMillis() < endTime) {
             try {

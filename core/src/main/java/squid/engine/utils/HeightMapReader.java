@@ -2,13 +2,10 @@ package squid.engine.utils;
 
 import org.joml.Vector3f;
 import org.lwjgl.system.MemoryStack;
-import squid.engine.scene.pieces.HeightMap;
+import squid.engine.graphics.meshes.HeightMap;
 import squid.engine.graphics.textures.Material;
 import squid.engine.graphics.textures.Texture;
 
-import javax.imageio.ImageIO;
-import javax.imageio.ImageReader;
-import java.awt.image.BufferedImage;
 import java.nio.ByteBuffer;
 import java.nio.IntBuffer;
 import java.util.ArrayList;
@@ -193,9 +190,9 @@ public class HeightMapReader {
                     normal.z = 0;
                 }
                 normal.normalize();
-                normals.add(normal.x);
-                normals.add(normal.y);
                 normals.add(normal.z);
+                normals.add(normal.y);
+                normals.add(normal.x);
             }
         }
         return Utils.listToArray(normals);

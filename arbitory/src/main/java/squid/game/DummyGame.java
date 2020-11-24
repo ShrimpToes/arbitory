@@ -1,12 +1,13 @@
 package squid.game;
 
 import org.joml.Vector2f;
+import org.joml.Vector2i;
 import org.joml.Vector3f;
 import org.joml.Vector4f;
 import squid.engine.IGame;
 import squid.engine.Window;
 import squid.engine.events.EventRegistry;
-import squid.engine.graphics.Mesh;
+import squid.engine.graphics.meshes.Mesh;
 import squid.engine.graphics.Renderer;
 import squid.engine.graphics.lighting.DirectionalLight;
 import squid.engine.graphics.lighting.Lighting;
@@ -85,6 +86,8 @@ public class DummyGame implements IGame {
     private FastNoise noise;
     private World world;
     private int steps = 100;
+    WorldGenerator.WorldGenData data;
+    private Vector2i chunckposbuffer = new Vector2i(0, 0);
 
     public DummyGame() {
         scene = new Scene();
@@ -147,14 +150,12 @@ public class DummyGame implements IGame {
 
         Vector3f startPos = new Vector3f(0, 0, 0);
 
-        world = new World(worldGenerator, 5, 5, 3);
+        world = new World(worldGenerator, 4, 3, 1);
 
-        WorldGenerator.WorldGenData data = new WorldGenerator.WorldGenData("textures/terrain.png", steps, steps, 1, FastNoise.NoiseType.Perlin);
+        data = new WorldGenerator.WorldGenData("textures/terrain.png", steps, steps, 1, FastNoise.NoiseType.Perlin);
         world.generateStartingTerrain(data);
 
-        for (Terrain terrain : world.getVisibleTerrain(camera.getPosition())) {
-            scene.setMeshMap(new GamePiece[]{terrain.getGamePiece()});
-        }
+
 //        Terrain terrain = worldGenerator.generateChunk(new World.Chunk(0, 0, 5, 5, 3), data);
 //        terrain.getGamePiece().getMesh().setMaterial(new Material(new Texture("textures/terrain.png")));
         MD5Model md5Model = MD5Model.parse("/models/monster.md5mesh");
@@ -214,7 +215,7 @@ public class DummyGame implements IGame {
         lightColor = new Vector3f(1, 1, 1);
         directionalLight = new DirectionalLight(lightColor, lightPosition, lightIntensity);
         directionalLight.setShadowPosMult(15f);
-        directionalLight.setOrthoCords(-10.0f, 10.0f, -10.0f, 10.0f, -1.0f, 20.0f);
+        directionalLight.setOrthoCoords(camera.getPosition(), -1f, 25f);
 
         lighting.setAmbientLight(ambientLight);
         lighting.setPointLightList(pointLightList);
@@ -319,7 +320,20 @@ public class DummyGame implements IGame {
         quadMesh.setMaterial(new Material(renderer.getShadowMap().getDepthMap()));
         gamePieces[1].setMesh(quadMesh);
 
-        directionalLight.setOrthoCords(camera.getPosition().x - 10f, camera.getPosition().x + 10f, -camera.getPosition().z - 10f, -camera.getPosition().z + 10f, -1f, 20f);
+        directionalLight.setOrthoCoords(camera.getPosition(), -1f, 25f);
+
+//        world.generateVisibleTerrain(camera.getPosition(), data);
+
+        if (!World.getChunkpos(camera.getPosition()).equals(chunckposbuffer)) {
+            world.generateVisibleTerrain(camera.getPosition(), data);
+        }
+        chunckposbuffer = World.getChunkpos(camera.getPosition());
+
+        for (Terrain terrain : world.getVisibleTerrain(camera.getPosition())) {
+            if (terrain != null) {
+                scene.setMeshMap(new GamePiece[]{terrain.getGamePiece()});
+            }
+        }
     }
 
     private void updateDirectionalLight() {

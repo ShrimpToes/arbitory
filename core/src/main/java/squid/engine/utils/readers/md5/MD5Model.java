@@ -1,6 +1,5 @@
 package squid.engine.utils.readers.md5;
 
-import squid.engine.graphics.Mesh;
 import squid.engine.utils.Utils;
 
 import java.util.ArrayList;

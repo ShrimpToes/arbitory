@@ -1,6 +1,5 @@
-package squid.engine.scene.pieces;
+package squid.engine.graphics.meshes;
 
-import squid.engine.graphics.Mesh;
 import squid.engine.graphics.textures.Material;
 
 public class HeightMap extends Mesh {

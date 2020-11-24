@@ -1,4 +1,4 @@
-package squid.engine.graphics;
+package squid.engine.graphics.meshes;
 
 import org.lwjgl.system.MemoryUtil;
 import squid.engine.graphics.textures.Material;

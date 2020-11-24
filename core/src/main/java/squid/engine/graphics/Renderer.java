@@ -4,6 +4,8 @@ import org.joml.Matrix4f;
 import org.joml.Vector3f;
 import org.joml.Vector4f;
 import squid.engine.graphics.lighting.*;
+import squid.engine.graphics.meshes.InstancedMesh;
+import squid.engine.graphics.meshes.Mesh;
 import squid.engine.graphics.textures.Material;
 import squid.engine.graphics.textures.Texture;
 import squid.engine.graphics.uniforms.*;
@@ -491,6 +493,7 @@ public class Renderer {
 
         Matrix4f ortho = transformation.getOrtho2dProjectionMatrix(0, Window.getWidth(), Window.getHeight(), 0);
         for (GamePiece gamePiece : hud.getGamePieces()) {
+            if (!gamePiece.hasMesh()) continue;
             Mesh mesh = gamePiece.getMesh();
             // Set ortohtaphic and model matrix for this HUD item
 

@@ -1,9 +1,9 @@
 package squid.engine.scene;
 
 import org.joml.Vector3f;
-import squid.engine.graphics.InstancedMesh;
+import squid.engine.graphics.meshes.InstancedMesh;
 import squid.engine.graphics.lighting.Lighting;
-import squid.engine.graphics.Mesh;
+import squid.engine.graphics.meshes.Mesh;
 import squid.engine.scene.pieces.GamePiece;
 import squid.engine.scene.pieces.particle.IParticleEmitter;
 

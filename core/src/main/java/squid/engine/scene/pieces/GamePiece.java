@@ -2,7 +2,8 @@ package squid.engine.scene.pieces;
 
 import org.joml.Quaternionf;
 import org.joml.Vector3f;
-import squid.engine.graphics.Mesh;
+import squid.engine.graphics.meshes.Mesh;
+import squid.engine.graphics.meshes.MeshBuilder;
 
 public class GamePiece {
 
@@ -34,6 +35,10 @@ public class GamePiece {
 
     public void setMesh(Mesh[] meshes) {
         this.meshes = meshes;
+    }
+
+    public boolean hasMesh() {
+        return (this.meshes != null);
     }
 
     public Vector3f getPosition() {

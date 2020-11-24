@@ -2,8 +2,6 @@ package squid.engine.scene;
 
 import org.joml.Vector2i;
 import org.joml.Vector3f;
-import squid.engine.graphics.textures.Material;
-import squid.engine.graphics.textures.Texture;
 import squid.engine.scene.pieces.Terrain;
 
 import java.util.ArrayList;
@@ -15,14 +13,14 @@ public class World {
     private Chunk baseChunk;
     private WorldGenerator generator;
     private int renderDistance;
-    private float chunkSize;
+    private static float chunkSize;
 
     public World(WorldGenerator generator, float chunkSize, int chunkHeight, int renderDistance) {
         world = new ChunkList();
         baseChunk = new Chunk(0, 0, chunkSize, chunkSize, chunkHeight);
         this.generator = generator;
         this.renderDistance = renderDistance;
-        this.chunkSize = chunkSize;
+        World.chunkSize = chunkSize;
     }
 
     private void genChunkPositions(int startx, int starty, int xdist, int ydist) {
@@ -30,7 +28,7 @@ public class World {
         for (int x = startx; x < startx + xdist; x++) {
             if (starty < 0) {
                 if (world.getList(x, starty).size() < -starty) {
-                    for (int i = world.getList(x, starty).size(); i < -starty; i++) {
+                    for (int i = world.getList(x, starty).size(); i < startx + xdist; i++) {
                         world.getList(x, starty).add(new ArrayList<>());
                     }
                 }
@@ -46,7 +44,7 @@ public class World {
                 int listy = Math.abs(y) + (y < 0 ? -1 : 0);
 
                 if (y < 0) {
-                    if (list.get(listx).size() < -y) {
+                    if (list.get(listx).size() < listy) {
                         for (int i = list.get(listx).size(); i <= listy; i++) {
                             list.get(listx).add(i, modelChunk);
                         }
@@ -74,29 +72,39 @@ public class World {
         return renderDistance * 2;
     }
 
-    public void generateStartingTerrain(WorldGenerator.WorldGenData data) throws Exception {
+    public void generateStartingTerrain(WorldGenerator.WorldGenData data) {
         genChunkPositions(-renderDistance * 3, -renderDistance * 3, renderDistance * 6, renderDistance * 6);
 
         genTerrain(-renderDistance, -renderDistance, renderDistance * 2, renderDistance * 2, data);
     }
 
-    public void genTerrain(int startx, int starty, int xdist, int ydist, WorldGenerator.WorldGenData data) throws Exception {
+    public void generateVisibleTerrain(Vector3f position, WorldGenerator.WorldGenData data) {
+        Vector2i chunkpos = getChunkpos(position);
+        genChunkPositions( chunkpos.x - (renderDistance * 3), chunkpos.y - (renderDistance * 3), renderDistance * 6, renderDistance * 6);
+
+        genTerrain(chunkpos.x - renderDistance, chunkpos.y - renderDistance, renderDistance * 2, renderDistance * 2, data);
+    }
+
+    public void genTerrain(int startx, int starty, int xdist, int ydist, WorldGenerator.WorldGenData data) {
         for (int x = startx; x < startx + xdist; x++) {
             for (int y = starty; y < starty + ydist; y++) {
-                generateChunk(new Vector2i(x, y), data);
+
+               generateChunk(new Vector2i(x, y), data); //flipped for a reason
+
             }
         }
     }
 
-    public void generateChunk(Vector2i chunkpos, WorldGenerator.WorldGenData data) throws Exception {
-//        new Thread(() -> {
-//            try {
+    public void generateChunk(Vector2i chunkpos, WorldGenerator.WorldGenData data) {
+        if (getChunk(chunkpos).terrain != null) return;
+        new Thread(() -> {
+            try {
                 getChunk(chunkpos).terrain = generator.generateChunk(getChunk(chunkpos), data);
-//            } catch (Exception e) {
-//                e.printStackTrace();
-//            }
-//        }).start();
-        getChunk(chunkpos).terrain.getGamePiece().getMesh().setMaterial(new Material(new Texture(data.textureFile)));
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }, "worldgen_thread: " + chunkpos.x + ", " + chunkpos.y).start();
+        System.out.println("generating chunk: " + chunkpos.x + ", " + chunkpos.y);
     }
 
     public Terrain[] getVisibleTerrain(Vector3f position) {
@@ -105,7 +113,8 @@ public class World {
         int i = 0;
         for (int startx = chunkpos.x - renderDistance; startx < chunkpos.x + renderDistance; startx++) {
             for (int starty = chunkpos.y - renderDistance; starty < chunkpos.y + renderDistance; starty ++) {
-                visibleTerrain[i] = world.getChunk(startx, starty).terrain;
+                Terrain curr = world.getChunk(startx, starty).terrain;
+                if (curr != null && curr.isBuilt()) { visibleTerrain[i] = curr; }
                 i++;
             }
         }
@@ -121,7 +130,7 @@ public class World {
         return world.getChunk(v.x, v.y);
     }
 
-    public Vector2i getChunkpos(Vector3f position) {
+    public static Vector2i getChunkpos(Vector3f position) {
         int x = (int) (position.x / chunkSize);
         int y = (int) (position.z / chunkSize);
         return new Vector2i(x, y);

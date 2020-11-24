@@ -61,7 +61,7 @@ public class EventRegistry {
     private static void call(final Event event) throws InvocationTargetException, IllegalAccessException, InstantiationException {
         if (register.get(event.getClass()) != null) {
             for (Method method : register.get(event.getClass())) {
-                method.invoke(classregister.get(method).getConstructors()[0].newInstance(null), event);
+                method.invoke(classregister.get(method).getConstructors()[0].newInstance((Object) null), event);
             }
         }
     }

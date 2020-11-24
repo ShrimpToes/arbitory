@@ -1,8 +1,5 @@
 package squid.engine.utils.readers.md5;
 
-import org.joml.Matrix4f;
-import org.joml.Vector4f;
-import squid.engine.graphics.Mesh;
 import squid.engine.utils.Utils;
 
 import java.util.ArrayList;

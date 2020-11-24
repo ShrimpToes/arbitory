@@ -1,7 +1,7 @@
 package squid.engine.utils.readers.md5;
 
 import org.joml.*;
-import squid.engine.graphics.Mesh;
+import squid.engine.graphics.meshes.Mesh;
 import squid.engine.graphics.textures.Material;
 import squid.engine.graphics.textures.Texture;
 import squid.engine.scene.pieces.animated.AnimGamePiece;

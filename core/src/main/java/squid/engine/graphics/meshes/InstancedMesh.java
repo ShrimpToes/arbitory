@@ -1,4 +1,4 @@
-package squid.engine.graphics;
+package squid.engine.graphics.meshes;
 
 import org.joml.Matrix4f;
 import org.lwjgl.system.MemoryUtil;

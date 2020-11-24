@@ -2,8 +2,7 @@ package squid.engine.scene.pieces;
 
 import squid.engine.graphics.textures.FontTexture;
 import squid.engine.graphics.textures.Material;
-import squid.engine.graphics.Mesh;
-import squid.engine.scene.pieces.GamePiece;
+import squid.engine.graphics.meshes.Mesh;
 import squid.engine.utils.Utils;
 
 import java.util.ArrayList;

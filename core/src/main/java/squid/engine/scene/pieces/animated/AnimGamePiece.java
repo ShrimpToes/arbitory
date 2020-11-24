@@ -1,7 +1,7 @@
 package squid.engine.scene.pieces.animated;
 
 import org.joml.Matrix4f;
-import squid.engine.graphics.Mesh;
+import squid.engine.graphics.meshes.Mesh;
 import squid.engine.scene.pieces.GamePiece;
 
 import java.util.List;
