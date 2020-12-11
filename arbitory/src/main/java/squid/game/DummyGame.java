@@ -150,7 +150,7 @@ public class DummyGame implements IGame {
 
         Vector3f startPos = new Vector3f(0, 0, 0);
 
-        world = new World(worldGenerator, 4, 3, 1);
+        world = new World(worldGenerator, 4, 3, 2);
 
         data = new WorldGenerator.WorldGenData("textures/terrain.png", steps, steps, 1, FastNoise.NoiseType.Perlin);
         world.generateStartingTerrain(data);

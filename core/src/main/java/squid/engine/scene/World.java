@@ -26,13 +26,6 @@ public class World {
     private void genChunkPositions(int startx, int starty, int xdist, int ydist) {
 
         for (int x = startx; x < startx + xdist; x++) {
-            if (starty < 0) {
-                if (world.getList(x, starty).size() < -starty) {
-                    for (int i = world.getList(x, starty).size(); i < startx + xdist; i++) {
-                        world.getList(x, starty).add(new ArrayList<>());
-                    }
-                }
-            }
 
             for (int y = starty; y < starty + ydist; y++) {
                 Chunk modelChunk = new Chunk(baseChunk);
@@ -43,33 +36,17 @@ public class World {
                 int listx = Math.abs(x) + (x < 0 ? -1 : 0);
                 int listy = Math.abs(y) + (y < 0 ? -1 : 0);
 
-                if (y < 0) {
-                    if (list.get(listx).size() < listy) {
-                        for (int i = list.get(listx).size(); i <= listy; i++) {
-                            list.get(listx).add(i, modelChunk);
-                        }
-                    } else {
-                        list.get(listx).set(listy, modelChunk);
-                    }
-                } else if (x < 0) {
-                    if (list.size() < listx) {
-                        for (int i = list.size() - 1; i < listx; i++) {
-                            list.add(new ArrayList<>());
-                        }
-                    }
-                    world.getList(x, y).get(listx).add(listy, modelChunk);
-                } else {
-                    if (list.size() <= listx) {
-                        list.add(new ArrayList<>());
-                    }
-                    list.get(listx).add(modelChunk);
+                while (list.size() <= listx) {
+                    list.add(new ArrayList<>());
                 }
+
+                while (list.get(listx).size() <= listy) {
+                    list.get(listx).add(baseChunk);
+                }
+
+                list.get(listx).set(listy, modelChunk);
             }
         }
-    }
-
-    public int getRenderWidth() {
-        return renderDistance * 2;
     }
 
     public void generateStartingTerrain(WorldGenerator.WorldGenData data) {
