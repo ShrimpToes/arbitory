@@ -1,0 +1,31 @@
+plugins {
+    id 'java'
+}
+
+project(':arbitory') {
+
+
+}
+
+version '1.0-SNAPSHOT'
+
+repositories {
+    mavenCentral()
+    maven { url "https://oss.sonatype.org/content/repositories/snapshots/" }
+}
+
+dependencies {
+
+    implementation project(':core')
+    testImplementation 'org.junit.jupiter:junit-jupiter:5.7.1'
+
+    implementation platform("org.lwjgl:lwjgl-bom:$lwjglVersion")
+
+    implementation "org.joml:joml:${jomlVersion}"
+
+
+
+    implementation "org.lwjgl:lwjgl-glfw"
+    runtimeOnly "org.lwjgl:lwjgl-glfw::$lwjglNatives"
+
+}

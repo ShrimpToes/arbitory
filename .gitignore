@@ -1,0 +1,6 @@
+build/
+arbitory/build/
+core/build/
+.gradle/
+.idea/
+out/

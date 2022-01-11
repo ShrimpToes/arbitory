@@ -1,0 +1,4 @@
+rootProject.name = 'spaceship-rumble'
+
+include 'core', 'arbitory'
+

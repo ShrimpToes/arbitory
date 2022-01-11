@@ -1,0 +1,335 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<module relativePaths="true" type="JAVA_MODULE" version="4">
+  <component name="NewModuleRootManager" inherit-compiler-output="true">
+    <exclude-output/>
+    <orderEntry type="inheritedJdk"/>
+    <content url="file://$MODULE_DIR$/">
+      <sourceFolder url="file://$MODULE_DIR$/src/test/java" isTestSource="true"/>
+      <sourceFolder url="file://$MODULE_DIR$/src/test/resources" type="java-test-resource"/>
+      <excludeFolder url="file://$MODULE_DIR$/.gradle"/>
+      <excludeFolder url="file://$MODULE_DIR$/build"/>
+    </content>
+    <orderEntry type="sourceFolder" forTests="false"/>
+    <orderEntry type="module" module-name="core"/>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar://C:/Users/Ike/.gradle/caches/modules-2/files-2.1/org.joml/joml/1.10.3/492cd01b61c3b17bb7cabe943d85402e7a1a4c39/joml-1.10.3.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar://C:/Users/Ike/.gradle/caches/modules-2/files-2.1/org.joml/joml/1.10.3/3bb82f2859a12dd73826f1f0a7b6175c27b208e6/joml-1.10.3-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar://C:/Users/Ike/.gradle/caches/modules-2/files-2.1/org.lwjgl/lwjgl-glfw/3.3.0/899e34f314525596f8fdb6476d3e56104da4601d/lwjgl-glfw-3.3.0.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar://C:/Users/Ike/.gradle/caches/modules-2/files-2.1/org.lwjgl/lwjgl-glfw/3.3.0/5a374b0900662628d69b180b265711fe7ce88bad/lwjgl-glfw-3.3.0-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar://C:/Users/Ike/.gradle/caches/modules-2/files-2.1/org.lwjgl/lwjgl/3.3.0/77b0dc0b6a6c82fb47368e73d55e23fdcfcf49a1/lwjgl-3.3.0.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar://C:/Users/Ike/.gradle/caches/modules-2/files-2.1/org.lwjgl/lwjgl/3.3.0/3062aa4c67e36145069dd5804ce953792a5a740b/lwjgl-3.3.0-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library" scope="RUNTIME">
+      <library>
+        <CLASSES>
+          <root url="jar://C:/Users/Ike/.gradle/caches/modules-2/files-2.1/org.lwjgl/lwjgl-glfw/3.3.0/b2d71cebdfecc512131879573e835211cb47b91f/lwjgl-glfw-3.3.0-natives-windows.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar://C:/Users/Ike/.gradle/caches/modules-2/files-2.1/org.lwjgl/lwjgl-glfw/3.3.0/5a374b0900662628d69b180b265711fe7ce88bad/lwjgl-glfw-3.3.0-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library" scope="RUNTIME">
+      <library>
+        <CLASSES>
+          <root url="jar://C:/Users/Ike/.gradle/caches/modules-2/files-2.1/org.lwjgl/lwjgl-assimp/3.3.0/82135e856184e76d38a97f729141298d3edcf0e4/lwjgl-assimp-3.3.0.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar://C:/Users/Ike/.gradle/caches/modules-2/files-2.1/org.lwjgl/lwjgl-assimp/3.3.0/50f05863b17d423a7e56328215001deb7a170630/lwjgl-assimp-3.3.0-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library" scope="RUNTIME">
+      <library>
+        <CLASSES>
+          <root url="jar://C:/Users/Ike/.gradle/caches/modules-2/files-2.1/org.lwjgl/lwjgl-assimp/3.3.0/3256ea17d2f82e98a2e6464cb165a3af49ac5e36/lwjgl-assimp-3.3.0-natives-windows.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar://C:/Users/Ike/.gradle/caches/modules-2/files-2.1/org.lwjgl/lwjgl-assimp/3.3.0/50f05863b17d423a7e56328215001deb7a170630/lwjgl-assimp-3.3.0-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library" scope="RUNTIME">
+      <library>
+        <CLASSES>
+          <root url="jar://C:/Users/Ike/.gradle/caches/modules-2/files-2.1/org.lwjgl/lwjgl-openal/3.3.0/902dd57b5a46e8a75ee843c2db61f80b4d130d48/lwjgl-openal-3.3.0.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar://C:/Users/Ike/.gradle/caches/modules-2/files-2.1/org.lwjgl/lwjgl-openal/3.3.0/b0fa5fd237eae9bf0bbb90146665ad0de198436a/lwjgl-openal-3.3.0-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library" scope="RUNTIME">
+      <library>
+        <CLASSES>
+          <root url="jar://C:/Users/Ike/.gradle/caches/modules-2/files-2.1/org.lwjgl/lwjgl-openal/3.3.0/d6e59a987bd196b9a7ce161db41fe1727b0d88f/lwjgl-openal-3.3.0-natives-windows.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar://C:/Users/Ike/.gradle/caches/modules-2/files-2.1/org.lwjgl/lwjgl-openal/3.3.0/b0fa5fd237eae9bf0bbb90146665ad0de198436a/lwjgl-openal-3.3.0-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library" scope="RUNTIME">
+      <library>
+        <CLASSES>
+          <root url="jar://C:/Users/Ike/.gradle/caches/modules-2/files-2.1/org.lwjgl/lwjgl-stb/3.3.0/69becce49e19671fccca33bfb273231055bd9fcf/lwjgl-stb-3.3.0.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar://C:/Users/Ike/.gradle/caches/modules-2/files-2.1/org.lwjgl/lwjgl-stb/3.3.0/e289d983da622e97f8e367d125cd6d8b90057017/lwjgl-stb-3.3.0-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library" scope="RUNTIME">
+      <library>
+        <CLASSES>
+          <root url="jar://C:/Users/Ike/.gradle/caches/modules-2/files-2.1/org.lwjgl/lwjgl-stb/3.3.0/58994705dc03cca4da31ab850edfae51cfbff74c/lwjgl-stb-3.3.0-natives-windows.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar://C:/Users/Ike/.gradle/caches/modules-2/files-2.1/org.lwjgl/lwjgl-stb/3.3.0/e289d983da622e97f8e367d125cd6d8b90057017/lwjgl-stb-3.3.0-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library" scope="RUNTIME">
+      <library>
+        <CLASSES>
+          <root url="jar://C:/Users/Ike/.gradle/caches/modules-2/files-2.1/org.lwjgl/lwjgl-vulkan/3.3.0/ef00d80d8addd6d0518edeaf1d7fb2e0ec58e854/lwjgl-vulkan-3.3.0.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar://C:/Users/Ike/.gradle/caches/modules-2/files-2.1/org.lwjgl/lwjgl-vulkan/3.3.0/3b25034ca230f06acb0f2b62d63f88c930bcbdc4/lwjgl-vulkan-3.3.0-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library" scope="RUNTIME">
+      <library>
+        <CLASSES>
+          <root url="jar://C:/Users/Ike/.gradle/caches/modules-2/files-2.1/org.lwjgl/lwjgl/3.3.0/835e69d483be5ff5f2259ec7802855bd2ff46492/lwjgl-3.3.0-natives-windows.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar://C:/Users/Ike/.gradle/caches/modules-2/files-2.1/org.lwjgl/lwjgl/3.3.0/3062aa4c67e36145069dd5804ce953792a5a740b/lwjgl-3.3.0-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library" scope="TEST">
+      <library>
+        <CLASSES>
+          <root url="jar://C:/Users/Ike/.gradle/caches/modules-2/files-2.1/org.junit.jupiter/junit-jupiter-params/5.7.1/6f81b3c053433a8a40a378d2b4f056c5c31e50ff/junit-jupiter-params-5.7.1.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar://C:/Users/Ike/.gradle/caches/modules-2/files-2.1/org.junit.jupiter/junit-jupiter-params/5.7.1/45d7318c86fa4c826fab267fadc0839d40267da2/junit-jupiter-params-5.7.1-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library" scope="TEST">
+      <library>
+        <CLASSES>
+          <root url="jar://C:/Users/Ike/.gradle/caches/modules-2/files-2.1/org.junit.jupiter/junit-jupiter-api/5.7.1/a7261dff44e64aea7f621842eac5977fd6d2412d/junit-jupiter-api-5.7.1.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar://C:/Users/Ike/.gradle/caches/modules-2/files-2.1/org.junit.jupiter/junit-jupiter-api/5.7.1/ebca04edd1975a8fd42846c4f6d0b8fec3d6efc1/junit-jupiter-api-5.7.1-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library" scope="TEST">
+      <library>
+        <CLASSES>
+          <root url="jar://C:/Users/Ike/.gradle/caches/modules-2/files-2.1/org.junit.platform/junit-platform-commons/1.7.1/7c49f0074842d07f4335de2389d624a7437d1407/junit-platform-commons-1.7.1.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar://C:/Users/Ike/.gradle/caches/modules-2/files-2.1/org.junit.platform/junit-platform-commons/1.7.1/4f2ca409307a4791a2d855b99ddbbf2c904b5fd5/junit-platform-commons-1.7.1-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library" scope="TEST">
+      <library>
+        <CLASSES>
+          <root url="jar://C:/Users/Ike/.gradle/caches/modules-2/files-2.1/org.junit.jupiter/junit-jupiter/5.7.1/a4a80ea9b0cca47781edcf9f2d4f1f4f7ce9436e/junit-jupiter-5.7.1.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar://C:/Users/Ike/.gradle/caches/modules-2/files-2.1/org.junit.jupiter/junit-jupiter/5.7.1/7009caa171d1d6af0f6f09dff25f9f574826a490/junit-jupiter-5.7.1-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library" scope="TEST">
+      <library>
+        <CLASSES>
+          <root url="jar://C:/Users/Ike/.gradle/caches/modules-2/files-2.1/org.apiguardian/apiguardian-api/1.1.0/fc9dff4bb36d627bdc553de77e1f17efd790876c/apiguardian-api-1.1.0.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar://C:/Users/Ike/.gradle/caches/modules-2/files-2.1/org.apiguardian/apiguardian-api/1.1.0/f3c15fe970af864390c8d0634c9f16aca1b064a8/apiguardian-api-1.1.0-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library" scope="TEST">
+      <library>
+        <CLASSES>
+          <root url="jar://C:/Users/Ike/.gradle/caches/modules-2/files-2.1/org.opentest4j/opentest4j/1.2.0/28c11eb91f9b6d8e200631d46e20a7f407f2a046/opentest4j-1.2.0.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar://C:/Users/Ike/.gradle/caches/modules-2/files-2.1/org.opentest4j/opentest4j/1.2.0/41d55b3c2254de9837b4ec8923cbd371b8a7eab5/opentest4j-1.2.0-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library" scope="TEST">
+      <library>
+        <CLASSES>
+          <root url="jar://C:/Users/Ike/.gradle/caches/modules-2/files-2.1/org.lwjgl/lwjgl-glfw/3.3.0/b2d71cebdfecc512131879573e835211cb47b91f/lwjgl-glfw-3.3.0-natives-windows.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar://C:/Users/Ike/.gradle/caches/modules-2/files-2.1/org.lwjgl/lwjgl-glfw/3.3.0/5a374b0900662628d69b180b265711fe7ce88bad/lwjgl-glfw-3.3.0-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library" scope="TEST">
+      <library>
+        <CLASSES>
+          <root url="jar://C:/Users/Ike/.gradle/caches/modules-2/files-2.1/org.junit.jupiter/junit-jupiter-engine/5.7.1/7fcfa59c5533abb41f86b1408960737eeaf1f49f/junit-jupiter-engine-5.7.1.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar://C:/Users/Ike/.gradle/caches/modules-2/files-2.1/org.junit.jupiter/junit-jupiter-engine/5.7.1/7c0d81d9af26a35e3f552eaaad2aa6867218d534/junit-jupiter-engine-5.7.1-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library" scope="TEST">
+      <library>
+        <CLASSES>
+          <root url="jar://C:/Users/Ike/.gradle/caches/modules-2/files-2.1/org.junit.platform/junit-platform-engine/1.7.1/d276a968c57f5d60a421dedd1f8b6ca2fae09e86/junit-platform-engine-1.7.1.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar://C:/Users/Ike/.gradle/caches/modules-2/files-2.1/org.junit.platform/junit-platform-engine/1.7.1/987bee3f7c9ae0c219bae82e3cfe073708cbadad/junit-platform-engine-1.7.1-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library" scope="TEST">
+      <library>
+        <CLASSES>
+          <root url="jar://C:/Users/Ike/.gradle/caches/modules-2/files-2.1/org.lwjgl/lwjgl-assimp/3.3.0/82135e856184e76d38a97f729141298d3edcf0e4/lwjgl-assimp-3.3.0.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar://C:/Users/Ike/.gradle/caches/modules-2/files-2.1/org.lwjgl/lwjgl-assimp/3.3.0/50f05863b17d423a7e56328215001deb7a170630/lwjgl-assimp-3.3.0-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library" scope="TEST">
+      <library>
+        <CLASSES>
+          <root url="jar://C:/Users/Ike/.gradle/caches/modules-2/files-2.1/org.lwjgl/lwjgl-assimp/3.3.0/3256ea17d2f82e98a2e6464cb165a3af49ac5e36/lwjgl-assimp-3.3.0-natives-windows.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar://C:/Users/Ike/.gradle/caches/modules-2/files-2.1/org.lwjgl/lwjgl-assimp/3.3.0/50f05863b17d423a7e56328215001deb7a170630/lwjgl-assimp-3.3.0-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library" scope="TEST">
+      <library>
+        <CLASSES>
+          <root url="jar://C:/Users/Ike/.gradle/caches/modules-2/files-2.1/org.lwjgl/lwjgl-openal/3.3.0/902dd57b5a46e8a75ee843c2db61f80b4d130d48/lwjgl-openal-3.3.0.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar://C:/Users/Ike/.gradle/caches/modules-2/files-2.1/org.lwjgl/lwjgl-openal/3.3.0/b0fa5fd237eae9bf0bbb90146665ad0de198436a/lwjgl-openal-3.3.0-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library" scope="TEST">
+      <library>
+        <CLASSES>
+          <root url="jar://C:/Users/Ike/.gradle/caches/modules-2/files-2.1/org.lwjgl/lwjgl-openal/3.3.0/d6e59a987bd196b9a7ce161db41fe1727b0d88f/lwjgl-openal-3.3.0-natives-windows.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar://C:/Users/Ike/.gradle/caches/modules-2/files-2.1/org.lwjgl/lwjgl-openal/3.3.0/b0fa5fd237eae9bf0bbb90146665ad0de198436a/lwjgl-openal-3.3.0-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library" scope="TEST">
+      <library>
+        <CLASSES>
+          <root url="jar://C:/Users/Ike/.gradle/caches/modules-2/files-2.1/org.lwjgl/lwjgl-stb/3.3.0/69becce49e19671fccca33bfb273231055bd9fcf/lwjgl-stb-3.3.0.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar://C:/Users/Ike/.gradle/caches/modules-2/files-2.1/org.lwjgl/lwjgl-stb/3.3.0/e289d983da622e97f8e367d125cd6d8b90057017/lwjgl-stb-3.3.0-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library" scope="TEST">
+      <library>
+        <CLASSES>
+          <root url="jar://C:/Users/Ike/.gradle/caches/modules-2/files-2.1/org.lwjgl/lwjgl-stb/3.3.0/58994705dc03cca4da31ab850edfae51cfbff74c/lwjgl-stb-3.3.0-natives-windows.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar://C:/Users/Ike/.gradle/caches/modules-2/files-2.1/org.lwjgl/lwjgl-stb/3.3.0/e289d983da622e97f8e367d125cd6d8b90057017/lwjgl-stb-3.3.0-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library" scope="TEST">
+      <library>
+        <CLASSES>
+          <root url="jar://C:/Users/Ike/.gradle/caches/modules-2/files-2.1/org.lwjgl/lwjgl-vulkan/3.3.0/ef00d80d8addd6d0518edeaf1d7fb2e0ec58e854/lwjgl-vulkan-3.3.0.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar://C:/Users/Ike/.gradle/caches/modules-2/files-2.1/org.lwjgl/lwjgl-vulkan/3.3.0/3b25034ca230f06acb0f2b62d63f88c930bcbdc4/lwjgl-vulkan-3.3.0-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library" scope="TEST">
+      <library>
+        <CLASSES>
+          <root url="jar://C:/Users/Ike/.gradle/caches/modules-2/files-2.1/org.lwjgl/lwjgl/3.3.0/835e69d483be5ff5f2259ec7802855bd2ff46492/lwjgl-3.3.0-natives-windows.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar://C:/Users/Ike/.gradle/caches/modules-2/files-2.1/org.lwjgl/lwjgl/3.3.0/3062aa4c67e36145069dd5804ce953792a5a740b/lwjgl-3.3.0-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+  </component>
+  <component name="ModuleRootManager"/>
+</module>

@@ -1,0 +1,9 @@
+3
+o /models/cube.obj
+o /models/spaceship0_poked.obj
+m /materials/cube.mtl
+m /materials/spaceship0_poked.mtl
+gp 1/1
+gp 1/1
+gp 2/2
+gpg 1/2/3
