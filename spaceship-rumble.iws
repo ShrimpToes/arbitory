@@ -5,14 +5,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="7aa9b3da-2400-4bc6-bcf5-2c9956953ece" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/arbitory/arbitory.iml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/arbitory/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/arbitory/build.gradle" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/build.gradle" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/core.iml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/spaceship-rumble.iml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/spaceship-rumble.ipr" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/spaceship-rumble.iws" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/squid/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/squid/Main.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/spaceship-rumble.iws" beforeDir="false" afterPath="$PROJECT_DIR$/spaceship-rumble.iws" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -139,6 +132,16 @@
     <configuration name="&lt;template&gt;" type="WebApp" default="true" selected="false">
       <Host>localhost</Host>
       <Port>5050</Port>
+    </configuration>
+    <configuration name="Main" type="Application" factoryName="Application">
+      <option name="ALTERNATIVE_JRE_PATH" value="17" />
+      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="true" />
+      <option name="MAIN_CLASS_NAME" value="squid.Main" />
+      <module name="spaceship-rumble.main" />
+      <method v="2">
+        <option name="BuildArtifacts" enabled="false" />
+        <option name="Make" enabled="true" />
+      </method>
     </configuration>
     <configuration default="true" type="Application" factoryName="Application">
       <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
