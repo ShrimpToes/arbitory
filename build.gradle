@@ -7,6 +7,11 @@ buildscript {
 plugins {
     id 'java'
     id 'idea'
+    id 'application'
+}
+
+application {
+    mainClass = 'squid.Main'
 }
 
 allprojects {
@@ -24,12 +29,23 @@ allprojects {
         mavenCentral()
         maven { url "https://oss.sonatype.org/content/repositories/snapshots/" }
     }
+
+    dependencies {
+
+        testImplementation 'org.junit.jupiter:junit-jupiter:5.8.2'
+
+        implementation "org.joml:joml:1.10.2"
+    }
 }
 
 dependencies {
 
     implementation project(':arbitory')
     implementation project(':core')
+    implementation project(':raytrace')
 
+}
 
+run {
+    systemProperty "java.library.path", "${projectDir}\\lib"
 }

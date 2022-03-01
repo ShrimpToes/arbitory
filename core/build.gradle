@@ -2,11 +2,8 @@ plugins {
     id 'java-library'
 }
 
-project(':core') {
+apply plugin: 'java-library'
 
-    apply plugin: 'java-library'
-
-}
 
 version '1.0-SNAPSHOT'
 
@@ -16,9 +13,6 @@ repositories {
 }
 
 dependencies {
-
-    testImplementation 'org.junit.jupiter:junit-jupiter:5.7.1'
-
     implementation platform("org.lwjgl:lwjgl-bom:$lwjglVersion")
 
     implementation "org.joml:joml:${jomlVersion}"
@@ -29,12 +23,13 @@ dependencies {
     implementation "org.lwjgl:lwjgl-openal"
     implementation "org.lwjgl:lwjgl-opengl"
     implementation "org.lwjgl:lwjgl-stb"
-    implementation "org.lwjgl:lwjgl-vulkan"
-    runtimeOnly "org.lwjgl:lwjgl::$lwjglNatives"
-    runtimeOnly "org.lwjgl:lwjgl-assimp::$lwjglNatives"
-    runtimeOnly "org.lwjgl:lwjgl-glfw::$lwjglNatives"
-    runtimeOnly "org.lwjgl:lwjgl-openal::$lwjglNatives"
-    runtimeOnly "org.lwjgl:lwjgl-opengl::$lwjglNatives"
-    runtimeOnly "org.lwjgl:lwjgl-stb::$lwjglNatives"
+
+
+    runtimeOnly "org.lwjgl:lwjgl:3.3.0"
+    runtimeOnly "org.lwjgl:lwjgl-assimp:3.3.0"
+    runtimeOnly "org.lwjgl:lwjgl-glfw:3.3.0"
+    runtimeOnly "org.lwjgl:lwjgl-openal:3.3.0"
+    runtimeOnly "org.lwjgl:lwjgl-opengl:3.3.0"
+    runtimeOnly "org.lwjgl:lwjgl-stb:3.3.0"
 
 }

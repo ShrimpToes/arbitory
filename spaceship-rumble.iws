@@ -5,7 +5,26 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="7aa9b3da-2400-4bc6-bcf5-2c9956953ece" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/raytrace/build.gradle" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/raytrace/settings.gradle" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/raytrace/spaceship-rumble.raytrace.iml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/raytrace/spaceship-rumble.raytrace.main.iml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/raytrace/spaceship-rumble.raytrace.test.iml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/raytrace/src/main/java/squid/raytrace/Raytrace.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/raytrace/src/test/java/squid/raytrace/cuda/TestCuda.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/arbitory/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/arbitory/build.gradle" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/arbitory/settings.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/arbitory/settings.gradle" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/arbitory/spaceship-rumble.arbitory.main.iml" beforeDir="false" afterPath="$PROJECT_DIR$/arbitory/spaceship-rumble.arbitory.main.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/arbitory/spaceship-rumble.arbitory.test.iml" beforeDir="false" afterPath="$PROJECT_DIR$/arbitory/spaceship-rumble.arbitory.test.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/build.gradle" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/core/build.gradle" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/spaceship-rumble.core.main.iml" beforeDir="false" afterPath="$PROJECT_DIR$/core/spaceship-rumble.core.main.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/spaceship-rumble.core.test.iml" beforeDir="false" afterPath="$PROJECT_DIR$/core/spaceship-rumble.core.test.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/settings.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/settings.gradle" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/spaceship-rumble.ipr" beforeDir="false" afterPath="$PROJECT_DIR$/spaceship-rumble.ipr" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/spaceship-rumble.iws" beforeDir="false" afterPath="$PROJECT_DIR$/spaceship-rumble.iws" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/spaceship-rumble.main.iml" beforeDir="false" afterPath="$PROJECT_DIR$/spaceship-rumble.main.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/spaceship-rumble.test.iml" beforeDir="false" afterPath="$PROJECT_DIR$/spaceship-rumble.test.iml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -60,12 +79,20 @@
   <component name="ExternalProjectsManager">
     <system id="GRADLE">
       <state>
+        <task path="$PROJECT_DIR$/raytrace">
+          <activation />
+        </task>
         <projects_view>
           <tree_state>
             <expand>
               <path>
                 <item name="" type="6a2764b6:ExternalProjectsStructure$RootNode" />
                 <item name="spaceship-rumble" type="f1a62948:ProjectNode" />
+              </path>
+              <path>
+                <item name="" type="6a2764b6:ExternalProjectsStructure$RootNode" />
+                <item name="spaceship-rumble" type="f1a62948:ProjectNode" />
+                <item name="raytrace" type="2d1252cf:ModuleNode" />
               </path>
             </expand>
             <select />
@@ -74,8 +101,27 @@
       </state>
     </system>
   </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Class" />
+      </list>
+    </option>
+  </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="HighlightingSettingsPerFile">
+    <setting file="file://$PROJECT_DIR$/arbitory/settings.gradle" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/raytrace/settings.gradle" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/arbitory/src/main/java/squid/game/SpaceshipGame.java" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/core/build.gradle" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/build.gradle" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/settings.gradle" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/raytrace/src/test/java/squid/raytrace/cuda/TestCuda.java" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/raytrace/build.gradle" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/raytrace/src/main/java/squid/raytrace/Raytrace.java" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/arbitory/build.gradle" root0="FORCE_HIGHLIGHTING" />
   </component>
   <component name="MarkdownSettingsMigration">
     <option name="stateVersion" value="1" />
@@ -107,6 +153,8 @@
     <property name="MemberChooser.sorted" value="false" />
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
+    <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/../../CPE203-2022/lab2" />
     <property name="project.structure.last.edited" value="Modules" />
     <property name="project.structure.proportion" value="0.16585366" />
     <property name="project.structure.side.proportion" value="0.2" />

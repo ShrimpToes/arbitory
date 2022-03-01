@@ -1,4 +1,4 @@
-package squid.engine.physics;
+package squid.engine.graphics.uniforms.settable.physics;
 
 import org.joml.Vector3f;
 

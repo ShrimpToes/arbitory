@@ -10,7 +10,7 @@
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="module" module-name="spaceship-rumble.core.main" />
-    <orderEntry type="library" name="Gradle: org.joml:joml:1.10.3" level="project" />
+    <orderEntry type="library" name="Gradle: org.joml:joml:1.10.2" level="project" />
     <orderEntry type="library" name="Gradle: org.lwjgl:lwjgl-assimp:3.3.0" level="project" />
     <orderEntry type="library" name="Gradle: org.lwjgl:lwjgl-glfw:3.3.0" level="project" />
     <orderEntry type="library" name="Gradle: org.lwjgl:lwjgl-openal:3.3.0" level="project" />
@@ -18,20 +18,14 @@
     <orderEntry type="library" name="Gradle: org.lwjgl:lwjgl-stb:3.3.0" level="project" />
     <orderEntry type="library" name="Gradle: org.lwjgl:lwjgl-vulkan:3.3.0" level="project" />
     <orderEntry type="library" name="Gradle: org.lwjgl:lwjgl:3.3.0" level="project" />
-    <orderEntry type="library" name="Gradle: org.junit.jupiter:junit-jupiter:5.7.1" level="project" />
-    <orderEntry type="library" name="Gradle: org.junit.jupiter:junit-jupiter-params:5.7.1" level="project" />
-    <orderEntry type="library" name="Gradle: org.junit.jupiter:junit-jupiter-api:5.7.1" level="project" />
-    <orderEntry type="library" name="Gradle: org.apiguardian:apiguardian-api:1.1.0" level="project" />
-    <orderEntry type="library" name="Gradle: org.junit.platform:junit-platform-commons:1.7.1" level="project" />
+    <orderEntry type="library" name="Gradle: org.junit.jupiter:junit-jupiter:5.8.2" level="project" />
+    <orderEntry type="library" name="Gradle: org.junit.jupiter:junit-jupiter-params:5.8.2" level="project" />
+    <orderEntry type="library" name="Gradle: org.junit.jupiter:junit-jupiter-api:5.8.2" level="project" />
+    <orderEntry type="library" scope="PROVIDED" name="Gradle: org.apiguardian:apiguardian-api:1.1.2" level="project" />
+    <orderEntry type="library" name="Gradle: org.junit.platform:junit-platform-commons:1.8.2" level="project" />
     <orderEntry type="library" name="Gradle: org.opentest4j:opentest4j:1.2.0" level="project" />
-    <orderEntry type="library" scope="RUNTIME" name="Gradle: org.lwjgl:lwjgl-assimp:natives-windows:3.3.0" level="project" />
-    <orderEntry type="library" scope="RUNTIME" name="Gradle: org.lwjgl:lwjgl-glfw:natives-windows:3.3.0" level="project" />
-    <orderEntry type="library" scope="RUNTIME" name="Gradle: org.lwjgl:lwjgl-openal:natives-windows:3.3.0" level="project" />
-    <orderEntry type="library" scope="RUNTIME" name="Gradle: org.lwjgl:lwjgl-opengl:natives-windows:3.3.0" level="project" />
-    <orderEntry type="library" scope="RUNTIME" name="Gradle: org.lwjgl:lwjgl-stb:natives-windows:3.3.0" level="project" />
-    <orderEntry type="library" scope="RUNTIME" name="Gradle: org.lwjgl:lwjgl:natives-windows:3.3.0" level="project" />
-    <orderEntry type="library" scope="RUNTIME" name="Gradle: org.junit.jupiter:junit-jupiter-engine:5.7.1" level="project" />
-    <orderEntry type="library" scope="RUNTIME" name="Gradle: org.junit.platform:junit-platform-engine:1.7.1" level="project" />
+    <orderEntry type="library" scope="RUNTIME" name="Gradle: org.junit.jupiter:junit-jupiter-engine:5.8.2" level="project" />
+    <orderEntry type="library" scope="RUNTIME" name="Gradle: org.junit.platform:junit-platform-engine:1.8.2" level="project" />
   </component>
   <component name="TestModuleProperties" production-module="spaceship-rumble.core.main" />
 </module>

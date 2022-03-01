@@ -1,0 +1,1 @@
+nvcc -I "C:\Program Files\Java\jdk-17.0.2\include" -I "C:\Program Files\Java\jdk-17.0.2\include\win32" squid_raytrace_Raytrace.cu -o ../../lib/raytrace.dll --shared

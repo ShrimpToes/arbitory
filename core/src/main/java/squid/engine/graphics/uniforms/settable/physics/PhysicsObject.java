@@ -1,4 +1,4 @@
-package squid.engine.physics;
+package squid.engine.graphics.uniforms.settable.physics;
 
 import squid.engine.scene.pieces.GamePiece;
 

@@ -182,8 +182,10 @@ public class SpaceshipGame implements IGame {
         renderer.cleanup();
 
 //        spaceship.cleanup();
-        for (GamePiece gamePiece : gamePieces) {
-            gamePiece.cleanup();
+        if (gamePieces != null) {
+            for (GamePiece gamePiece : gamePieces) {
+                gamePiece.cleanup();
+            }
         }
     }
 }
